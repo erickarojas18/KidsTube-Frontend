@@ -1,5 +1,8 @@
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Videos from "./pages/Videos.js";
+import Login from "./pages/Login.js";
+import Register from "./pages/Register.js";
+import Home from "./pages/Home.js";
 import "./App.css";
 
 function App() {
@@ -13,8 +16,10 @@ function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Videos />} />
-          <Route path="/videos" element={<Videos />} />
+          <Route path="/" element={<Login />} />      {/* Nueva ruta de Login */}
+          <Route path="/register" element={<Register />} />  {/* Ruta para Registro */}
+          <Route path="/home" element={<Home />} />  {/* Ruta para Home */}
+          <Route path="/videos" element={<Videos />} />  {/* Ruta para Videos */}
         </Routes>
       </div>
     </Router>
@@ -22,4 +27,3 @@ function App() {
 }
 
 export default App;
-
