@@ -2,7 +2,7 @@
 .login-container {
     display: flex;
     justify-content: center;
-     align-items: flex-start; /* Mueve la caja hacia arriba */
+    align-items: center;
     height: 100vh;
     position: relative;
     background: url('/public/kids.png') no-repeat center center;
