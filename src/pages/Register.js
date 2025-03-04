@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import "../register.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -62,22 +63,26 @@ const Register = () => {
   };
 
   return (
-    <AuthForm
-      title="Registro"
-      fields={[
-        { label: "Correo Electrónico", type: "email", name: "email", value: formData.email, onChange: handleChange, required: true },
-        { label: "Contraseña", type: "password", name: "password", value: formData.password, onChange: handleChange, required: true },
-        { label: "Repetir Contraseña", type: "password", name: "confirmPassword", value: formData.confirmPassword, onChange: handleChange, required: true },
-        { label: "Número Telefónico", type: "tel", name: "phone", value: formData.phone, onChange: handleChange, required: true },
-        { label: "PIN (6 dígitos)", type: "password", name: "pin", value: formData.pin, onChange: handleChange, required: true },
-        { label: "Nombre", type: "text", name: "name", value: formData.name, onChange: handleChange, required: true },
-        { label: "Apellidos", type: "text", name: "lastname", value: formData.lastname, onChange: handleChange, required: true },
-        { label: "País", type: "text", name: "country", value: formData.country, onChange: handleChange, required: false },
-        { label: "Fecha de Nacimiento", type: "date", name: "birthdate", value: formData.birthdate, onChange: handleChange, required: true },
-      ]}
-      onSubmit={handleSubmit}
-      buttonText="Registrarse"
-    />
+    <div className="register-container">
+      <div className="register-box">
+        <h2 className="register-title">Registro</h2>
+        <AuthForm
+          fields={[
+            { label: "Correo Electrónico", type: "email", name: "email", value: formData.email, onChange: handleChange, required: true },
+            { label: "Contraseña", type: "password", name: "password", value: formData.password, onChange: handleChange, required: true },
+            { label: "Repetir Contraseña", type: "password", name: "confirmPassword", value: formData.confirmPassword, onChange: handleChange, required: true },
+            { label: "Número Telefónico", type: "tel", name: "phone", value: formData.phone, onChange: handleChange, required: true },
+            { label: "PIN (6 dígitos)", type: "password", name: "pin", value: formData.pin, onChange: handleChange, required: true },
+            { label: "Nombre", type: "text", name: "name", value: formData.name, onChange: handleChange, required: true },
+            { label: "Apellidos", type: "text", name: "lastname", value: formData.lastname, onChange: handleChange, required: true },
+            { label: "País", type: "text", name: "country", value: formData.country, onChange: handleChange, required: false },
+            { label: "Fecha de Nacimiento", type: "date", name: "birthdate", value: formData.birthdate, onChange: handleChange, required: true },
+          ]}
+          onSubmit={handleSubmit}
+          buttonText="Registrarse"
+        />
+      </div>
+    </div>
   );
 };
 

@@ -30,6 +30,8 @@ function App() {
         <Nav.Link as={Link} to="/videos" className="text-dark">Videos</Nav.Link>
         <Nav.Link as={Link} to="/register" className="text-dark">Registro</Nav.Link>
         <Nav.Link as={Link} to="/" className="text-dark">Login</Nav.Link>
+        <Nav.Link as={Link} to="/" className="text-dark">Cerrar Sesion</Nav.Link>
+
       </Nav>
     </Navbar.Collapse>
   </Container>

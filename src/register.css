@@ -1,0 +1,105 @@
+/* Register.css */
+/* Register.css */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  background: url('/public/home.png') no-repeat center center;
+  position: relative;
+  background-position: right 460px top -50px;
+  padding-top: 50px; 
+}
+
+.register-box {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Estilos para el formulario */
+.auth-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.auth-form .form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.auth-form .form-group.full-width {
+  grid-column: span 2;
+}
+
+/* Estilos para los labels */
+.auth-form label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* Estilos para los inputs */
+.auth-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.auth-form input:focus {
+  border: 1px solid #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Estilos para el botón */
+.auth-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #bd3ebd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  grid-column: span 2;
+}
+
+.auth-form button:hover {
+  background-color: #d838bd;
+}
+
+/* Responsividad */
+@media (max-width: 500px) {
+  .auth-form {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-form .form-group.full-width {
+    grid-column: span 1;
+  }
+
+  .auth-form button {
+    grid-column: span 1;
+  }
+}
