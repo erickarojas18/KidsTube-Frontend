@@ -1,0 +1,101 @@
+/* videos.css */
+.videos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff6b6b, #ffcc5c);
+    padding: 20px;
+}
+
+.videos-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+.videos-title {
+    font-size: 28px;
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+
+.videos-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.videos-input {
+    padding: 10px;
+    border: 2px solid #ff9800;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+}
+
+.videos-button {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.videos-button.add {
+    background: #4caf50;
+    color: white;
+}
+
+.videos-button.edit {
+    background: #ff9800;
+    color: white;
+}
+
+.videos-button.delete {
+    background: #f44336;
+    color: white;
+}
+
+.videos-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.videos-list {
+    list-style: none;
+    padding: 0;
+}
+
+.videos-item {
+    background: #f8f8f8;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.videos-link {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.videos-link:hover {
+    text-decoration: underline;
+}
+
+.videos-actions {
+    display: flex;
+    gap: 10px;
+}

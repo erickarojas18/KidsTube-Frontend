@@ -1,0 +1,74 @@
+/* home.css */
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff6bc6, hsl(263, 62%, 51%));
+}
+
+.home-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.home-title {
+    font-size: 28px;
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+
+.home-subtitle {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.home-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.home-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-button span {
+    font-size: 16px;
+}
+
+.admin {
+    background: #4caf50;
+    color: white;
+}
+
+.videos {
+    background: #ff9800;
+    color: white;
+}
+
+.logout {
+    background: #f44336;
+    color: white;
+}
+
+.home-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

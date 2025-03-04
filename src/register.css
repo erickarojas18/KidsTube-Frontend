@@ -1,16 +1,16 @@
-/* Register.css */
-/* Register.css */
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   padding: 20px;
-  background: url('/public/home.png') no-repeat center center;
+  background: linear-gradient(to right, #ff6bc6, hsl(32, 89%, 45%));
   position: relative;
-  background-position: right 460px top -50px;
+  background-size: cover; /* Ajusta el fondo para cubrir toda la pantalla */
+  background-position: center; /* Centra el fondo */
   padding-top: 50px; 
 }
+
 
 .register-box {
   background: white;
