@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "../components/AuthForm";
+import "../login.css"; // Importa el CSS
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,18 +13,18 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (event, data) => {
-    event.preventDefault(); // Ahora se llama correctamente
-  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     try {
       const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data), // Ahora se usa 'data' en vez de 'formData'
+        body: JSON.stringify(formData),
       });
-  
+
       const responseData = await response.json();
-  
+
       if (response.ok) {
         alert("Login exitoso 🎉");
         localStorage.setItem("token", responseData.token);
@@ -37,18 +37,37 @@ const Login = () => {
       alert("Hubo un problema con el servidor ❌");
     }
   };
-  
 
   return (
-    <AuthForm
-      title="Iniciar Sesión"
-      fields={[
-        { label: "Correo Electrónico", type: "email", name: "email", value: formData.email, onChange: handleChange, required: true },
-        { label: "Contraseña", type: "password", name: "password", value: formData.password, onChange: handleChange, required: true },
-      ]}
-      onSubmit={handleSubmit}
-      buttonText="Iniciar Sesión"
-    />
+    <div className="login-container">
+      <div className="login-box">
+        <h2 className="login-title">Login</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo Electrónico"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Iniciar Sesión</button>
+        </form>
+      </div>
+
+      
+
+     
+    </div>
+    
   );
 };
 

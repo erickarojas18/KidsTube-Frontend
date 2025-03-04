@@ -1,0 +1,37 @@
+/* Login.css */
+.login-container {
+    display: flex;
+    justify-content: center;
+     align-items: flex-start; /* Mueve la caja hacia arriba */
+    height: 100vh;
+    position: relative;
+    background: url('/public/kids.png') no-repeat center center;
+    background-size: cover;
+}
+
+
+/* Caja del login */
+.login-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(113, 22, 22, 0.1);
+    text-align: center;
+    width: 350px;
+    position: relative;
+    z-index: 2; /* Asegura que esté por encima de la imagen de fondo */
+}
+
+/* Imagen decorativa */
+.login-decor {
+    position: absolute;
+    right: 5%;
+    bottom: 10%;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: contain;
+   
+}
+
+
