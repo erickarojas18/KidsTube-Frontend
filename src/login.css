@@ -1,37 +1,52 @@
-/* Login.css */
+/* Contenedor principal centrado */
 .login-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
     height: 100vh;
-    position: relative;
     background: url('/public/kids.png') no-repeat center center;
     background-size: cover;
+    justify-content: flex-start; /* Lo mantiene alineado a la izquierda */
+    padding-left: 5%; /* Ajusta este valor según necesites */
 }
 
-
-/* Caja del login */
+/* Caja del login más grande y centrada */
 .login-box {
     background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(113, 22, 22, 0.1);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     text-align: center;
-    width: 350px;
-    position: relative;
-    z-index: 2; /* Asegura que esté por encima de la imagen de fondo */
+    max-width: none; /* Evita restricciones */
+    width: 100px; /* Prueba un ancho menor */
+    min-width: 400px; /* Asegura un mínimo */
+    margin-top: -80px; /* Sube el cuadro */ 
+    
 }
 
-/* Imagen decorativa */
-.login-decor {
-    position: absolute;
-    right: 5%;
-    bottom: 10%;
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-    object-fit: contain;
-   
+/* Texto y botones más grandes */
+.login-box h1 {
+    font-size: 2rem;
+    margin-bottom: 5rem;
 }
 
+.login-box input,
+.login-box button {
+    font-size: 1.2rem;
+    padding: 0.8rem;
+    width: 110%; /* Ahora los inputs y botones ocuparán el ancho de la caja */
+    margin-top: 2rem;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
 
+.login-box button {
+    background: #bd3ebd;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-box button:hover {
+    background: #6a2ad1;
+}
