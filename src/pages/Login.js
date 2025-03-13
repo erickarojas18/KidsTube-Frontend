@@ -8,6 +8,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,33 +17,55 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
+    setError("");
+  
     try {
+      console.log("Datos enviados al backend:", formData);
+  
       const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       const responseData = await response.json();
-
-      if (response.ok) {
-        alert("Login exitoso 🎉");
-        localStorage.setItem("token", responseData.token);
-        navigate("/home");
-      } else {
-        alert(responseData.message || "Error en el login ❌");
+  
+      if (!response.ok) {
+        throw new Error(responseData.message || "Error en el login ❌");
       }
+  
+      console.log("Respuesta completa del backend:", responseData);
+      console.log("Usuario recibido:", responseData.user);
+  
+      // Guardar datos en localStorage
+      localStorage.setItem("token", responseData.token);
+      localStorage.setItem("user", JSON.stringify(responseData.user));
+  
+      // Extraer el userId de forma flexible
+      const userId = responseData.user?._id || responseData.user?.id || null;
+      if (userId) {
+        localStorage.setItem("userId", userId);
+        console.log("User ID guardado en localStorage:", userId);
+      } else {
+        console.warn("No se encontró _id ni id en el usuario.");
+      }
+  
+      // Redirigir a AdminRestricted
+      navigate("/AdminRestricted");
     } catch (error) {
-      console.error("Error en el login:", error);
-      alert("Hubo un problema con el servidor ❌");
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="login-container">
       <div className="login-box">
         <h2 className="login-title">Login</h2>
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -59,15 +83,12 @@ const Login = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit">Iniciar Sesión</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
         </form>
       </div>
-
-      
-
-     
     </div>
-    
   );
 };
 

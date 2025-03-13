@@ -21,7 +21,7 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async () => {
     if (formData.password !== formData.confirmPassword) {
       alert("Las contraseñas no coinciden ❌");
       return;

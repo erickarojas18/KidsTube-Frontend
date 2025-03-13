@@ -1,27 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 
 const AuthForm = ({ onSubmit, fields, buttonText }) => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Evita la recarga de la página
-    onSubmit(e,formData); // 🔥 Ahora pasamos los datos, no el evento
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="auth-form">
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(); }} className="auth-form">
       {fields.map((field) => (
         <div key={field.name}>
           <label>{field.label}</label>
           <input
             type={field.type}
             name={field.name}
-            value={formData[field.name] || ""}
-            onChange={handleChange}
+            value={field.value} // Asegura que usa el estado del componente padre
+            onChange={field.onChange} // Usa la función del componente padre
             required={field.required}
           />
         </div>

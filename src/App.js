@@ -4,6 +4,10 @@ import Videos from "./pages/Videos";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import AdminRestrictedUsers from "./pages/AdminRestricted";
+import NewProfile from "./pages/NewProfile";
+import SelectProfile from "./pages/Selectprofile";
+
 import "./App.css";
 
 function App() {
@@ -45,6 +49,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/videos" element={<Videos />} />
+          <Route path="/select-profile" element={<SelectProfile />} />
+          <Route path="/new-profile" element={<NewProfile />} />
+        <Route path="/AdminRestricted" element={<AdminRestrictedUsers />} />
+
         </Routes>
       </div>
     </Router>
