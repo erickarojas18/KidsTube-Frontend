@@ -51,15 +51,14 @@ const Login = () => {
         console.warn("No se encontró _id ni id en el usuario.");
       }
   
-      // Redirigir a AdminRestricted
-      navigate("/AdminRestricted");
+      // Redirigir a select-profile
+      navigate("select-profile"); // Actualiza aquí la URL
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="login-container">

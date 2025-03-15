@@ -7,16 +7,24 @@ const SelectProfile = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
+  const [refresh, setRefresh] = useState(false); // Estado para forzar la actualización
   const navigate = useNavigate();
 
   const userId = localStorage.getItem("userId"); // ID del usuario logueado
 
   useEffect(() => {
     // Obtener perfiles restringidos del usuario autenticado
-    axios.get(`http://localhost:5000/restricted-users/${userId}`)
-      .then(response => setProfiles(response.data))
+    axios.get(`http://localhost:5000/api/restricted-users/${userId}`)
+      .then(response => {
+        // Verifica si la respuesta tiene los datos esperados
+        if (response.data && Array.isArray(response.data)) {
+          setProfiles(response.data);
+        } else {
+          console.warn("⚠️ La respuesta no contiene un arreglo de perfiles");
+        }
+      })
       .catch(error => console.error("Error al obtener perfiles:", error));
-  }, [userId]);
+  }, [userId, refresh]); // Agregar `refresh` como dependencia
 
   const handleProfileClick = (profile) => {
     setSelectedUser(profile);
@@ -42,14 +50,24 @@ const SelectProfile = () => {
   return (
     <div className="container">
       <h2>Selecciona un perfil</h2>
-      <div className="profiles">
-        {profiles.map(profile => (
-          <div key={profile._id} className="profile-card" onClick={() => handleProfileClick(profile)}>
-            <img src={profile.avatar} alt={profile.name} />
-            <p>{profile.name}</p>
-          </div>
-        ))}
-      </div>
+      {/* Verifica si hay perfiles */}
+      {profiles.length === 0 ? (
+        <p>No se han creado perfiles aún. Por favor, agrega un perfil.</p>
+      ) : (
+        <div className="profiles">
+          {profiles.map(profile => (
+            <div key={profile._id} className="profile-card" onClick={() => handleProfileClick(profile)}>
+              {/* Mostrar avatar */}
+              <img
+                src={profile.avatar ? `/avatars/${profile.avatar}` : "/avatars/default-avatar.png"} // Asegúrate de que la ruta sea correcta
+                alt={profile.name}
+                style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+              />
+              <p>{profile.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {selectedUser && (
         <div className="pin-modal">
@@ -65,8 +83,8 @@ const SelectProfile = () => {
         </div>
       )}
 
-        <button onClick={() => navigate("/new-profile")}>➕ Agregar Perfil</button>
-      <button onClick={() => navigate("/manage-profiles")}>⚙️ Administrar Perfiles</button>
+      <button onClick={() => navigate("/new-profile")}>➕ Agregar Perfil</button>
+      <button onClick={() => navigate("/AdminRestricted")}>⚙️ Administrar Perfiles</button>
     </div>
   );
 };

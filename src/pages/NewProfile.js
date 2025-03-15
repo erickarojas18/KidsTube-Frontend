@@ -10,22 +10,22 @@ const AdminRestrictedUsers = () => {
 
   const handleAddUser = () => {
     const parentUser = localStorage.getItem("userId"); // Recupera el usuario principal
-
+  
     if (!parentUser) {
       alert("Error: No se encontró el usuario principal ❌");
       return;
     }
-
+  
     if (!name || !pin || !avatar) {
       alert("Todos los campos son obligatorios ❌");
       return;
     }
-
+  
     if (pin.length !== 6 || isNaN(pin)) {
       alert("El PIN debe tener exactamente 6 dígitos numéricos ❌");
       return;
     }
-
+  
     fetch("http://localhost:5000/api/restricted-users/add-restricted-user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,7 +39,8 @@ const AdminRestrictedUsers = () => {
       })
       .then(() => {
         alert("Usuario restringido agregado ✅");
-        window.location.reload();
+        window.location.href = "http://localhost:3001/select-profile"; // Redirige a la página de selección de perfil
+
       })
       .catch((error) => {
         console.error("❌ Error al agregar usuario restringido:", error);

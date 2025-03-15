@@ -15,20 +15,23 @@ const ManageProfiles = () => {
       return;
     }
 
-    axios.get(`http://localhost:5000/restricted-users/${userId}`)
+    axios.get(`http://localhost:5000/api/restricted-users/${userId}`)
+
+
       .then(response => setProfiles(response.data))
       .catch(error => console.error("❌ Error al obtener perfiles:", error));
   }, [userId]);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/delete-restricted-user/${id}`);
+      // Actualiza la URL para eliminar el perfil correctamente
+      await axios.delete(`http://localhost:5000/api/restricted-users/delete-restricted-user/${id}`);
       setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
     } catch (error) {
       console.error("❌ Error al eliminar perfil:", error);
     }
   };
-
+  
   return (
     <div className="container">
       <h2>Administrar Perfiles</h2>
