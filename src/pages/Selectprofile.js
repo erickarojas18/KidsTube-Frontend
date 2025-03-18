@@ -4,43 +4,62 @@ import axios from "axios";
 
 const SelectProfile = () => {
   const [profiles, setProfiles] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
-  const [refresh, setRefresh] = useState(false); // Estado para forzar la actualización
-  const navigate = useNavigate();
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [redirectPath, setRedirectPath] = useState(""); // Define a dónde se redirige después del PIN
 
+  const navigate = useNavigate();
   const userId = localStorage.getItem("userId"); // ID del usuario logueado
 
   useEffect(() => {
-    // Obtener perfiles restringidos del usuario autenticado
     axios.get(`http://localhost:5000/api/restricted-users/${userId}`)
       .then(response => {
-        // Verifica si la respuesta tiene los datos esperados
         if (response.data && Array.isArray(response.data)) {
           setProfiles(response.data);
         } else {
-          console.warn("⚠️ La respuesta no contiene un arreglo de perfiles");
+          console.warn(" La respuesta no contiene un arreglo de perfiles");
         }
       })
       .catch(error => console.error("Error al obtener perfiles:", error));
-  }, [userId, refresh]); // Agregar `refresh` como dependencia
+  }, [userId]);
 
   const handleProfileClick = (profile) => {
-    setSelectedUser(profile);
+    setRedirectPath("/videos"); // Al tocar perfil, se va a videos después del PIN
+    setShowPinModal(true);
+    setError("");
+    setPin("");
+  };
+
+  const handleAdminProfilesClick = () => {
+    setRedirectPath("/AdminRestricted"); // Al tocar "Administrar Perfiles", se va a AdminRestricted después del PIN
+    setShowPinModal(true);
+    setError("");
+    setPin("");
+  };
+
+  const handleAdminClick = () => {
+    setRedirectPath("/videos"); // Al tocar "Administración", se va a videos después del PIN
+    setShowPinModal(true);
     setError("");
     setPin("");
   };
 
   const handlePinSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/validate-pin", {
-        userId: selectedUser._id,
+      console.log("🔑 Enviando PIN:", pin);
+
+      const response = await axios.post("http://localhost:5000/api/validate-admin-pin", {
+        userId, // Siempre se valida con el usuario principal
         pin
       });
 
       if (response.data.message === "PIN válido") {
-        navigate("/home"); // Redirigir a la pantalla de inicio
+        console.log("✅ PIN correcto, redirigiendo...");
+        setShowPinModal(false);
+        navigate(redirectPath); // Redirigir a la página correspondiente
+      } else {
+        setError("PIN incorrecto");
       }
     } catch (error) {
       setError("PIN incorrecto");
@@ -50,16 +69,15 @@ const SelectProfile = () => {
   return (
     <div className="container">
       <h2>Selecciona un perfil</h2>
-      {/* Verifica si hay perfiles */}
+
       {profiles.length === 0 ? (
         <p>No se han creado perfiles aún. Por favor, agrega un perfil.</p>
       ) : (
         <div className="profiles">
           {profiles.map(profile => (
             <div key={profile._id} className="profile-card" onClick={() => handleProfileClick(profile)}>
-              {/* Mostrar avatar */}
               <img
-                src={profile.avatar ? `/avatars/${profile.avatar}` : "/avatars/default-avatar.png"} // Asegúrate de que la ruta sea correcta
+                src={profile.avatar ? `/avatars/${profile.avatar}` : "/avatars/default-avatar.png"}
                 alt={profile.name}
                 style={{ width: "100px", height: "100px", borderRadius: "50%" }}
               />
@@ -69,22 +87,27 @@ const SelectProfile = () => {
         </div>
       )}
 
-      {selectedUser && (
-        <div className="pin-modal">
-          <h3>Ingresa el PIN de {selectedUser.name}</h3>
-          <input
-            type="password"
-            maxLength="6"
-            value={pin}
-            onChange={(e) => setPin(e.target.value)}
-          />
-          <button onClick={handlePinSubmit}>Ingresar</button>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+      <button onClick={() => navigate("/new-profile")}>➕ Agregar Perfil</button>
+      <button onClick={handleAdminProfilesClick}>⚙️ Administrar Perfiles</button>
+      <button onClick={handleAdminClick}>📂 Administración</button>
+
+      {/* Modal para ingresar PIN del usuario principal */}
+      {showPinModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Ingrese el PIN del usuario principal</h3>
+            <input
+              type="password"
+              maxLength="6"
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+            />
+            <button onClick={handlePinSubmit}>Validar</button>
+            <button onClick={() => setShowPinModal(false)}>Cancelar</button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+          </div>
         </div>
       )}
-
-      <button onClick={() => navigate("/new-profile")}>➕ Agregar Perfil</button>
-      <button onClick={() => navigate("/AdminRestricted")}>⚙️ Administrar Perfiles</button>
     </div>
   );
 };

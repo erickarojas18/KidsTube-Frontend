@@ -46,7 +46,8 @@ const ManageProfiles = () => {
           {profiles.map(profile => (
             <li key={profile._id}>
               {profile.name} - {profile.pin}
-              <button onClick={() => handleDelete(profile._id)}>❌ Eliminar</button>
+              <button onClick={() => navigate(`/edit/${profile._id}`)}> Editar</button>
+              <button onClick={() => handleDelete(profile._id)}> Eliminar</button>
             </li>
           ))}
         </ul>
