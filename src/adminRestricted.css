@@ -1,0 +1,157 @@
+/* Estilos generales para el contenedor */
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+}
+
+/* Título */
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos para los perfiles */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  justify-items: center; /* Alinea los items al centro */
+  margin-top: 20px;
+}
+
+/* Estilos para los perfiles individuales */
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el avatar y el nombre */
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile-card:hover {
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño cuando se pasa el mouse */
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* Hace el avatar redondo */
+  object-fit: cover;
+}
+
+.profile-name {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  text-align: center; /* Alinea el nombre al centro */
+}
+
+/* Botones de acción flotante */
+.actions {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+.circle-btn {
+  background-color: #ff5733;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.circle-btn:hover {
+  background-color: #ff2a00;
+}
+/* Estilos generales para el contenedor */
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+}
+
+/* Título */
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Estilos para los perfiles */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  justify-content: center; /* Centra los elementos */
+}
+
+.profile-avatar-container {
+  position: relative; /* Asegura que el icono se posicione sobre el avatar */
+  text-align: center;
+  cursor: pointer; /* Hace que el cursor cambie a puntero */
+}
+
+/* Avatar redondo */
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Nombre debajo del avatar */
+.profile-name {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Icono de lápiz en la parte superior del avatar */
+.edit-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Botón de acción flotante */
+.actions {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+.circle-btn {
+  background-color: #ff5733;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.circle-btn:hover {
+  background-color: #ff2a00;
+}

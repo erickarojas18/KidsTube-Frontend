@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../adminRestricted.css";
 
 const ManageProfiles = () => {
   const [profiles, setProfiles] = useState([]);
@@ -16,44 +17,69 @@ const ManageProfiles = () => {
     }
 
     axios.get(`http://localhost:5000/api/restricted-users/${userId}`)
-
-
       .then(response => setProfiles(response.data))
       .catch(error => console.error("❌ Error al obtener perfiles:", error));
   }, [userId]);
 
-  const handleDelete = async (id) => {
-    try {
-      // Actualiza la URL para eliminar el perfil correctamente
-      await axios.delete(`http://localhost:5000/api/restricted-users/delete-restricted-user/${id}`);
-      setProfiles(prevProfiles => prevProfiles.filter(profile => profile._id !== id));
-    } catch (error) {
-      console.error("❌ Error al eliminar perfil:", error);
-    }
+  const handleProfileClick = (id) => {
+    // Redirigir a la página de edición del perfil
+    navigate(`/edit/${id}`);
   };
-  
+
+  const handleEditIconClick = (event, id) => {
+    // Evitar que el clic en el icono de editar se propague y redirija
+    event.stopPropagation(); // Detener la propagación del clic
+    navigate(`/edit/${id}`); // Redirigir al editar perfil
+  };
+
   return (
     <div className="container">
-      <h2>Administrar Perfiles</h2>
-      
+      <h2>Selecciona un perfil</h2>
+
       {profiles.length === 0 ? (
-        <>
-          <p>No hay perfiles disponibles.</p>
-          <button onClick={() => navigate("/new-profile")}>➕ Crear Perfil</button>
-        </>
+        <p>No se han creado perfiles aún. Por favor, agrega un perfil.</p>
       ) : (
-        <ul>
-          {profiles.map(profile => (
-            <li key={profile._id}>
-              {profile.name} - {profile.pin}
-              <button onClick={() => navigate(`/edit/${profile._id}`)}> Editar</button>
-              <button onClick={() => handleDelete(profile._id)}> Eliminar</button>
-            </li>
+        <div className="profiles-grid">
+          {profiles.map((profile) => (
+            <div
+              key={profile._id}
+              className="profile-card"
+              onClick={() => handleProfileClick(profile._id)} // Redirige a la página de edición cuando se hace clic en el avatar
+            >
+              <div className="avatar-container">
+                <img
+                  src={
+                    profile.avatar
+                      ? `/avatars/${profile.avatar}`
+                      : "/avatars/default-avatar.png"
+                  }
+                  alt={profile.name}
+                  className="profile-avatar"
+                />
+                 <div className="edit-icon">✏️</div>
+               
+              </div>
+              <p className="profile-name">{profile.name}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
 
-      <button onClick={() => navigate("/select-profile")}>⬅️ Volver</button>
+      {/* Botones de acción */}
+      <div className="actions">
+        <button
+          className="circle-btn"
+          onClick={() => navigate("/new-profile")}
+        >
+          ➕
+        </button>
+        <button className="circle-btn" onClick={() => navigate("/admin-profiles")}>
+          ⚙️
+        </button>
+        <button className="circle-btn" onClick={() => navigate("/admin")}>
+          📂
+        </button>
+      </div>
     </div>
   );
 };

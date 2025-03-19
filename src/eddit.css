@@ -1,0 +1,102 @@
+/* Contenedor principal */
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 30px; /* Espacio entre avatar y formulario */
+}
+
+/* Título */
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Estilos para los inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Sección de selección de avatares */
+.avatar-selector {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Vista previa del avatar seleccionada a la izquierda */
+.avatar-preview {
+  margin-top: 20px;
+  flex-shrink: 0;
+}
+
+.avatar-preview-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #007BFF;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+}
+
+/* Avatar thumbnail */
+.avatar-option {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.avatar-option:hover {
+  transform: scale(1.1);
+}
+
+.avatar-thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.avatar-thumbnail.selected {
+  border-color: #007BFF; /* Borde azul cuando está seleccionado */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
+}
+
+/* Botón de guardar cambios */
+button {
+  background-color: #28a745;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* Botón de cancelar */
+button + button {
+  background-color: #dc3545;
+  margin-left: 15px;
+}
+
+button + button:hover {
+  background-color: #c82333;
+}

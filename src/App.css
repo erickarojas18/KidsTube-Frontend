@@ -9,12 +9,11 @@ body {
 /* Estilos de la Barra de Navegación */
 .navbar {
   background: linear-gradient(135deg, #ff8a00, #e52e71);
-  padding: 5px; /* Ajustado para reducir tamaño sin ser demasiado pequeño */
+  padding: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px; /* Altura moderada */
 }
 
 .navbar-left {
@@ -23,33 +22,32 @@ body {
 }
 
 .navbar-brand {
-  font-size: 1.4rem; /* Tamaño intermedio entre original y reducción */
+  font-size: 1.5rem;
   font-weight: bold;
   color: #fff !important;
   display: flex;
   align-items: center;
-  margin-left: 18px;
+  margin-left: 20px;
 }
 
 .navbar-brand img {
-  width: px; /* Reducción ligera, antes 50px */
-  height: 45px;
-  margin-right: 12px;
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
 }
 
 .navbar-nav {
   display: flex;
   align-items: center;
-  margin-right: 18px;
+  margin-right: 20px;
 }
 
 .navbar-nav .nav-link {
   color: #fff !important;
-  font-size: 1.05rem; /* Leve ajuste */
+  font-size: 1.1rem;
   font-weight: 500;
   transition: color 0.3s;
-  margin-right: 18px;
-  padding: 6px 10px; /* Espaciado reducido */
+  margin-right: 20px;
 }
 
 .navbar-nav .nav-link:hover {
@@ -69,12 +67,47 @@ body {
   }
 }
 
+/* Estilos de Botón */
+button {
+  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background: #a09ea2;
+}
+
+/* Contenedor Principal */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Tarjetas de Contenido */
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
 /* Ajustes Responsivos */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     text-align: center;
-    height: auto;
   }
 
   .navbar-left {
@@ -83,11 +116,11 @@ body {
 
   .navbar-nav {
     flex-direction: column;
-    margin-top: 8px;
+    margin-top: 10px;
   }
   
   .navbar-nav .nav-link {
     margin-right: 0;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 }
