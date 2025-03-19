@@ -2,12 +2,19 @@
 .home-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: white;
+    align-items: center; /* Centrar contenido */
+    width: 100vw;
+    height: 100vh; /* Ocupar toda la pantalla */
+    background: url('/public/kids2.png') no-repeat center center fixed;
+    background-size: cover; /* Asegura que la imagen cubra todo */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
+
 .home-card {
+    place-items: center start;
     background: white;
     padding: 30px;
     border-radius: 20px;
@@ -15,6 +22,8 @@
     text-align: center;
     width: 90%;
     max-width: 400px;
+    align-self: start; /* Lo alinea en la parte superior */
+   
 }
 
 .home-title {

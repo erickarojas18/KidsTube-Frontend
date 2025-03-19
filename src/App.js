@@ -19,7 +19,6 @@ function App() {
         <Container className="d-flex align-items-center">
         <Navbar.Brand as={Link} to="/" className="fw-bold text-dark d-flex align-items-center">
         <img src="/tube.png" alt="KidsTube Logo" width="50" height="50" className="me-2 rounded-circle border border-white" />
-        <span className="fs-4">KidsTube</span>
       KidsTube 
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
