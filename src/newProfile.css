@@ -1,0 +1,69 @@
+/* Estilo general para los inputs */
+input {
+  width: 100%;
+  max-width: 400px; /* Máxima anchura para no ser demasiado grande */
+  padding: 12px;
+  font-size: 16px;
+  color: #333;
+  border: 2px solid #ffb6c1; /* Borde rosado suave */
+  border-radius: 10px;
+  background-color: #fafafa; /* Fondo gris suave */
+  margin-bottom: 20px;
+  transition: all 0.3s ease-in-out; /* Transiciones suaves */
+}
+
+input:focus {
+  outline: none;
+  border-color: #dd6e97; /* Verde suave al enfocar */
+  box-shadow: 0 0 8px rgba(107, 142, 35, 0.3); /* Sombra verde */
+}
+
+input::placeholder {
+  color: #aaa; /* Color suave para el placeholder */
+}
+
+/* Estilo para el botón */
+button {
+  color: white;
+  background-color: #ffb6c1; /* Fondo rosado suave */
+  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  font-size: 16px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+ 
+  transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+button:active {
+  background-color: #d13bff; /* Cambiar el color al presionar */
+  transform: scale(0.98); /* Efecto de contracción */
+}
+
+/* Estilo del encabezado */
+h3 {
+  font-size: 24px;
+  color: #43453e; /* Verde suave */
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-family: 'Nunito', sans-serif; /* Tipografía amigable */
+  text-transform: capitalize;
+}
+
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .profiles-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+  }
+
+  input {
+    width: 80%; /* Inputs más pequeños en móviles */
+  }
+}

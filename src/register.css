@@ -4,7 +4,7 @@
   align-items: center;
   height: 100vh;
   padding: 20px;
-  background: linear-gradient(to right, #ff6bc6, hsl(32, 89%, 45%));
+  background: white;
   position: relative;
   background-size: cover; /* Ajusta el fondo para cubrir toda la pantalla */
   background-position: center; /* Centra el fondo */

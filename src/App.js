@@ -16,15 +16,10 @@ function App() {
       <div className="App">
         {/* Barra de Navegación Mejorada */}
         <Navbar expand="lg" className="navbar-light bg-light p-2">
-  <Container>
-    <Navbar.Brand as={Link} to="/" className="fw-bold text-dark">
-      <img
-        src="/tube.png" // Cambia esto por la ruta correcta de tu imagen
-        alt="KidsTube Logo"
-        width="40" // Ajusta el tamaño según necesites
-        height="40"
-        className="d-inline-block align-top me-2" // Espaciado a la derecha
-      />
+        <Container className="d-flex align-items-center">
+        <Navbar.Brand as={Link} to="/" className="fw-bold text-dark d-flex align-items-center">
+        <img src="/tube.png" alt="KidsTube Logo" width="50" height="50" className="me-2 rounded-circle border border-white" />
+        <span className="fs-4">KidsTube</span>
       KidsTube 
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />

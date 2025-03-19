@@ -1,45 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../selectProfile.css"; // Asegúrate de que el archivo CSS está en la ruta correcta
 
 const SelectProfile = () => {
   const [profiles, setProfiles] = useState([]);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [showPinModal, setShowPinModal] = useState(false);
-  const [redirectPath, setRedirectPath] = useState(""); // Define a dónde se redirige después del PIN
+  const [redirectPath, setRedirectPath] = useState("");
 
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId"); // ID del usuario logueado
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/restricted-users/${userId}`)
-      .then(response => {
+    if (!userId) {
+      console.warn("⚠️ No se encontró un userId en localStorage");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:5000/api/restricted-users/${userId}`)
+      .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           setProfiles(response.data);
         } else {
-          console.warn(" La respuesta no contiene un arreglo de perfiles");
+          console.warn("⚠️ La respuesta no contiene un arreglo de perfiles.");
         }
       })
-      .catch(error => console.error("Error al obtener perfiles:", error));
+      .catch((error) => {
+        console.error("❌ Error al obtener perfiles:", error);
+      });
   }, [userId]);
 
-  const handleProfileClick = (profile) => {
-    setRedirectPath("/videos"); // Al tocar perfil, se va a videos después del PIN
+  const handleProfileClick = () => {
+    setRedirectPath("/videos");
     setShowPinModal(true);
     setError("");
     setPin("");
   };
 
   const handleAdminProfilesClick = () => {
-    setRedirectPath("/AdminRestricted"); // Al tocar "Administrar Perfiles", se va a AdminRestricted después del PIN
+    setRedirectPath("/AdminRestricted");
     setShowPinModal(true);
     setError("");
     setPin("");
   };
 
   const handleAdminClick = () => {
-    setRedirectPath("/videos"); // Al tocar "Administración", se va a videos después del PIN
+    setRedirectPath("/videos");
     setShowPinModal(true);
     setError("");
     setPin("");
@@ -49,20 +58,21 @@ const SelectProfile = () => {
     try {
       console.log("🔑 Enviando PIN:", pin);
 
-      const response = await axios.post("http://localhost:5000/api/validate-admin-pin", {
-        userId, // Siempre se valida con el usuario principal
-        pin
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/validate-admin-pin",
+        { userId, pin }
+      );
 
       if (response.data.message === "PIN válido") {
         console.log("✅ PIN correcto, redirigiendo...");
         setShowPinModal(false);
-        navigate(redirectPath); // Redirigir a la página correspondiente
+        navigate(redirectPath);
       } else {
-        setError("PIN incorrecto");
+        setError("PIN incorrecto ❌");
       }
     } catch (error) {
-      setError("PIN incorrecto");
+      setError("PIN incorrecto ❌");
+      console.error("❌ Error en la validación del PIN:", error);
     }
   };
 
@@ -73,25 +83,45 @@ const SelectProfile = () => {
       {profiles.length === 0 ? (
         <p>No se han creado perfiles aún. Por favor, agrega un perfil.</p>
       ) : (
-        <div className="profiles">
-          {profiles.map(profile => (
-            <div key={profile._id} className="profile-card" onClick={() => handleProfileClick(profile)}>
+        <div className="profiles-grid">
+          {profiles.map((profile) => (
+            <div
+              key={profile._id}
+              className="profile-card"
+              onClick={handleProfileClick}
+            >
               <img
-                src={profile.avatar ? `/avatars/${profile.avatar}` : "/avatars/default-avatar.png"}
+                src={
+                  profile.avatar
+                    ? `/avatars/${profile.avatar}`
+                    : "/avatars/default-avatar.png"
+                }
                 alt={profile.name}
-                style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+                className="profile-avatar"
               />
-              <p>{profile.name}</p>
+              <p className="profile-name">{profile.name}</p>
             </div>
           ))}
         </div>
       )}
 
-      <button onClick={() => navigate("/new-profile")}>➕ Agregar Perfil</button>
-      <button onClick={handleAdminProfilesClick}>⚙️ Administrar Perfiles</button>
-      <button onClick={handleAdminClick}>📂 Administración</button>
+      {/* Botones de acción */}
+      <div className="actions">
+        <button
+          className="circle-btn"
+          onClick={() => navigate("/new-profile")}
+        >
+          ➕
+        </button>
+        <button className="circle-btn" onClick={handleAdminProfilesClick}>
+          ⚙️
+        </button>
+        <button className="circle-btn" onClick={handleAdminClick}>
+          📂
+        </button>
+      </div>
 
-      {/* Modal para ingresar PIN del usuario principal */}
+      {/* Modal para ingresar PIN */}
       {showPinModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -101,10 +131,21 @@ const SelectProfile = () => {
               maxLength="6"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
+              className="pin-input"
+              placeholder="******"
             />
-            <button onClick={handlePinSubmit}>Validar</button>
-            <button onClick={() => setShowPinModal(false)}>Cancelar</button>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="error-text">{error}</p>}
+            <div className="button-group">
+              <button className="btn validate" onClick={handlePinSubmit}>
+                Validar
+              </button>
+              <button
+                className="btn cancel"
+                onClick={() => setShowPinModal(false)}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}

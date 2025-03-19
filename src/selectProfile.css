@@ -1,0 +1,295 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas en lugar de auto-fill */
+  gap: 20px;
+  max-width: 1000px; /* Ajuste para que no sea muy grande */
+  margin: 20px auto;
+  padding: 10px;
+  justify-content: center;
+}
+
+/* Estilos generales para las tarjetas de perfil */
+.profile-card {
+transition: transform 0.3s ease; /* Agrega transición suave */
+}
+
+.profile-card.selected {
+transform: scale(1.1); /* Efecto de escalado al seleccionar el perfil */
+}
+
+.profile-avatar {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+.profile-name {
+margin-top: 10px;
+font-size: 14px;
+text-align: center;
+}
+
+/* Estilos generales para las tarjetas de perfil */
+.profile-card {
+transition: transform 0.3s ease; /* Agrega transición suave */
+cursor: pointer; /* Para indicar que se puede hacer clic */
+}
+
+.profile-card.selected .profile-avatar {
+transform: scale(1.1); /* Efecto de escalado al seleccionar el perfil */
+box-shadow: 0 0 15px 5px #ffeb3b; /* Efecto de destello circular */
+transition: all 0.3s ease; /* Transición suave para el efecto */
+}
+
+/* Efecto de destello al pasar el mouse */
+.profile-avatar {
+width: 80px;
+height: 80px;
+border-radius: 50%; /* Hacer la imagen circular */
+object-fit: cover;
+transition: box-shadow 0.5s ease-out; /* Transición para el destello */
+}
+
+/* Efecto de destello en hover (al pasar el mouse) */
+.profile-avatar:hover {
+box-shadow: 0 0 15px 5px #d13bff; /* Efecto de destello alrededor de la imagen */
+transform: scale(1.05); /* Opcional: pequeño efecto de escala en hover */
+}
+
+.profile-card:hover {
+  transform: scale(1.1); /* Efecto de escala para la tarjeta de perfil */
+  transition: transform 0.3s ease; /* Transición suave */
+}
+
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: #d13bff;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .profiles-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móviles */
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 20px;
+}
+
+.circle-btn {
+  background: linear-gradient(135deg, #ff8a00, #e52e71); /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none;
+  padding: 30px; /* Tamaño del círculo */
+  border-radius: 50%; /* Hacer el botón circular */
+  font-size: 24px; /* Tamaño del ícono */
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.circle-btn:hover {
+  transform: scale(1.1); /* Efecto de escalado al seleccionar el perfil */
+box-shadow: 0 0 15px 5px #ffeb3b; /* Efecto de destello circular */
+transition: all 0.3s ease; /* Transición suave para el efecto */
+}
+
+
+h2 {
+font-size: 40px;
+font-weight: bold;
+color: #060606; /* Verde suave para sensación natural */
+font-family: 'Nunito', sans-serif; /* Tipografía amigable */
+text-transform: capitalize;
+letter-spacing: 2px;
+margin-bottom: 30px;
+position: relative;
+}
+
+h2::before {
+content: "";
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 60px;
+height: 4px;
+background-color: #f33350; /* Color pastel para la línea decorativa */
+border-radius: 2px;
+}
+
+.pin-modal {
+background-color: #ffffff;
+border-radius: 15px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+padding: 30px;
+width: 300px;
+margin: 20px auto;
+text-align: center;
+font-family: 'Nunito', sans-serif; /* Fuente amigable */
+transition: transform 0.3s ease-in-out;
+}
+
+.pin-modal h3 {
+font-size: 24px;
+color: #f1537b; 
+margin-bottom: 20px;
+}
+
+.pin-modal input {
+width: 100%;
+padding: 15px;
+font-size: 18px;
+color: #333;
+border: 2px solid #ffb6c1; /* Bordes suaves */
+border-radius: 10px;
+margin-bottom: 20px;
+background-color: #fafafa;
+transition: border 0.3s ease-in-out;
+}
+
+.pin-modal input:focus {
+outline: none;
+border-color:#f1537b;  /* Cambio de color de borde al enfocar */
+}
+
+.pin-modal button {
+background-color: #ffb6c1; /* Botón rosado */
+color: white;
+font-size: 18px;
+padding: 12px 20px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.pin-modal button:hover {
+background-color: #ff8da1; /* Cambio de color de fondo en hover */
+}
+
+.error-message {
+color: red;
+font-size: 14px;
+margin-top: 10px;
+font-weight: bold;
+}
+
+.pin-modal input::placeholder {
+color: #aaa; /* Color suave para el texto del placeholder */
+}
+
+/* Fondo oscuro semitransparente */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Contenedor del modal */
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 320px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Input del PIN */
+.pin-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.pin-input:focus {
+  border-color: #007bff;
+}
+
+/* Mensaje de error */
+.error-text {
+  color: red;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Grupo de botones */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+/* Botones */
+.btn {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Botón Validar */
+.btn.validate {
+  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  color: white;
+}
+
+.btn.validate:hover {
+  background: #db145a;
+}
+
+/* Botón Cancelar */
+.btn.cancel {
+  background: #ccc;
+  color: #333;
+}
+
+.btn.cancel:hover {
+  background: #999;
+}

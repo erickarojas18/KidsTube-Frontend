@@ -1,38 +1,93 @@
-.App {
-  text-align: center;
+/* Estilos Generales */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #4339d3;
-  min-height: 100vh;
+/* Estilos de la Barra de Navegación */
+.navbar {
+  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  padding: 5px; /* Ajustado para reducir tamaño sin ser demasiado pequeño */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100px; /* Altura moderada */
 }
 
-.App-link {
-  color: #61dafb;
+.navbar-left {
+  display: flex;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.navbar-brand {
+  font-size: 1.4rem; /* Tamaño intermedio entre original y reducción */
+  font-weight: bold;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  margin-left: 18px;
+}
+
+.navbar-brand img {
+  width: px; /* Reducción ligera, antes 50px */
+  height: 45px;
+  margin-right: 12px;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  margin-right: 18px;
+}
+
+.navbar-nav .nav-link {
+  color: #fff !important;
+  font-size: 1.05rem; /* Leve ajuste */
+  font-weight: 500;
+  transition: color 0.3s;
+  margin-right: 18px;
+  padding: 6px 10px; /* Espaciado reducido */
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ffeb3b !important; /* Amarillo brillante */
+  animation: destello 0.5s ease-out;
+}
+
+@keyframes destello {
+  0% {
+    box-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    box-shadow: 0 0 20px #ffeb3b, 0 0 30px #ffeb3b, 0 0 40px #ffeb3b;
+  }
+  100% {
+    box-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
+  }
+}
+
+/* Ajustes Responsivos */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+  }
+
+  .navbar-left {
+    justify-content: center;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    margin-top: 8px;
+  }
+  
+  .navbar-nav .nav-link {
+    margin-right: 0;
+    margin-bottom: 8px;
   }
 }
