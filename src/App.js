@@ -8,6 +8,7 @@ import AdminRestrictedUsers from "./pages/AdminRestricted";
 import NewProfile from "./pages/NewProfile";
 import SelectProfile from "./pages/Selectprofile";
 import Edit from "./pages/Edit";
+import Playlists from "./pages/Playlists";
 import "./App.css";
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
           <Route path="/new-profile" element={<NewProfile />} />
           <Route path="/AdminRestricted" element={<AdminRestrictedUsers />} />
           <Route path="/edit/:profileId" element={<Edit/>} />
-
+          <Route path="/playlists" element={<Playlists />} />
         </Routes>
       </div>
     </Router>

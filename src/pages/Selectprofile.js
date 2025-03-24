@@ -34,7 +34,7 @@ const SelectProfile = () => {
   }, [userId]);
 
   const handleProfileClick = () => {
-    setRedirectPath("/videos");
+    setRedirectPath("/Playlists");
     setShowPinModal(true);
     setError("");
     setPin("");
