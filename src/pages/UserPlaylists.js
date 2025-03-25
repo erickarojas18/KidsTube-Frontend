@@ -190,7 +190,7 @@ const UserPlaylists = () => {
                     {playlists.length > 0 ? (
                         <div className="row g-3">
                             {playlists.map((playlist) => (
-                                <div key={playlist._id} className="col-md-4">
+                                <div key={playlist._id} className="col-md-6 col-lg-4">
                                     <div className="card h-100">
                                         <div className="card-body">
                                             <h5 className="card-title">{playlist.name}</h5>
@@ -240,7 +240,7 @@ const UserPlaylists = () => {
                     {history.length > 0 ? (
                         <div className="row g-3">
                             {history.map((item) => (
-                                <div key={item._id} className="col-md-4">
+                                <div key={item._id} className="col-md-6 col-lg-4">
                                     <div className="card h-100">
                                         <div className="card-body">
                                             <h6 className="card-title">{item.videoId.name}</h6>
@@ -301,7 +301,7 @@ const UserPlaylists = () => {
                         {filteredVideos?.length > 0 ? (
                             <div className="row g-3">
                                 {filteredVideos.map((video) => (
-                                    <div key={video._id} className="col-md-4">
+                                    <div key={video._id} className="col-md-6 col-lg-4">
                                         <div className="card h-100">
                                             <div className="card-body">
                                                 <h6 className="card-title">{video.name}</h6>

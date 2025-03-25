@@ -23,6 +23,7 @@ const Playlists = () => {
         fetchRestrictedUsers();
         fetchAvailableVideos();
         fetchPlaylists();
+       
     }, []);
 
     // Función para limpiar mensajes
@@ -218,7 +219,7 @@ const Playlists = () => {
                 setError("Error al eliminar el video");
             }
         }
-    };
+    };  
 
     return (
         <div className="container-fluid mt-4">
@@ -476,6 +477,8 @@ const Playlists = () => {
                 </Modal.Body>
             </Modal>
         </div>
+     
+        
     );
 };
 
