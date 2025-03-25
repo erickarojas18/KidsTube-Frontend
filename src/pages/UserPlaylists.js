@@ -11,10 +11,12 @@ const UserPlaylists = () => {
     const [userName, setUserName] = useState("");
     const [availableVideos, setAvailableVideos] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [success, setSuccess] = useState("");
-    const [error, setError] = useState("");
     const [history, setHistory] = useState([]);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [historyError, setHistoryError] = useState("");
+    const [historySuccess, setHistorySuccess] = useState("");
+    const [playlistError, setPlaylistError] = useState("");
+    const [playlistSuccess, setPlaylistSuccess] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -70,7 +72,9 @@ const UserPlaylists = () => {
 
     const fetchHistory = async (userId) => {
         try {
+            console.log('Obteniendo historial para usuario:', userId);
             const { data } = await axios.get(`http://localhost:5000/api/history/user/${userId}`);
+            console.log('Historial obtenido:', data);
             setHistory(data || []);
         } catch (error) {
             console.error("Error al obtener el historial:", error);
@@ -80,15 +84,29 @@ const UserPlaylists = () => {
 
     const handleVideoClick = async (videoId) => {
         const userId = localStorage.getItem("selectedUserId");
+        if (!userId || !videoId) {
+            console.error('Faltan datos necesarios:', { userId, videoId });
+            return;
+        }
+
         try {
-            await axios.post('http://localhost:5000/api/history', {
+            console.log('Registrando video en historial:', { userId, videoId });
+            const response = await axios.post('http://localhost:5000/api/history', {
                 userId,
                 videoId
             });
-            fetchHistory(userId);
+            console.log('Respuesta del servidor:', response.data);
+            await fetchHistory(userId);
         } catch (error) {
-            console.error("Error al registrar en el historial:", error);
+            console.error("Error al registrar en el historial:", error.response?.data || error);
+            setHistoryError("Error al registrar el video en el historial");
+            setHistorySuccess("");
         }
+    };
+
+    const handleWatchVideo = async (video) => {
+        await handleVideoClick(video._id);
+        window.open(video.url, '_blank');
     };
 
     const clearHistory = async () => {
@@ -96,9 +114,11 @@ const UserPlaylists = () => {
         try {
             await axios.delete(`http://localhost:5000/api/history/user/${userId}`);
             setHistory([]);
-            setSuccess("Historial limpiado exitosamente");
+            setHistorySuccess("Historial limpiado exitosamente");
+            setHistoryError("");
         } catch (error) {
-            setError("Error al limpiar el historial");
+            setHistoryError("Error al limpiar el historial");
+            setHistorySuccess("");
         }
     };
 
@@ -119,21 +139,19 @@ const UserPlaylists = () => {
             );
 
             if (response.data) {
-                // Actualizar la playlist seleccionada con los datos actualizados
                 setSelectedPlaylist(response.data);
-                
-                // Actualizar la lista de playlists
                 setPlaylists(playlists.map(p => 
                     p._id === selectedPlaylist._id 
                         ? response.data
                         : p
                 ));
-                
-                setSuccess("¡Video agregado exitosamente! 🎉");
+                setPlaylistSuccess("¡Video agregado exitosamente! 🎉");
+                setPlaylistError("");
             }
         } catch (error) {
             console.error("Error al agregar video:", error);
-            setError(error.response?.data?.message || "Error al agregar el video");
+            setPlaylistError(error.response?.data?.message || "Error al agregar el video");
+            setPlaylistSuccess("");
         }
     };
 
@@ -207,8 +225,8 @@ const UserPlaylists = () => {
                     <Modal.Title>Historial de Videos</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    {success && <div className="alert alert-success">{success}</div>}
+                    {historyError && <div className="alert alert-danger">{historyError}</div>}
+                    {historySuccess && <div className="alert alert-success">{historySuccess}</div>}
                     
                     <div className="d-flex justify-content-end mb-3">
                         <Button 
@@ -261,8 +279,8 @@ const UserPlaylists = () => {
                     <Modal.Title>Videos de {selectedPlaylist?.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    {success && <div className="alert alert-success">{success}</div>}
+                    {playlistError && <div className="alert alert-danger">{playlistError}</div>}
+                    {playlistSuccess && <div className="alert alert-success">{playlistSuccess}</div>}
 
                     {/* Buscador de Videos */}
                     <div className="mb-4">
@@ -298,10 +316,7 @@ const UserPlaylists = () => {
                                                 <div className="d-flex gap-2">
                                                     <Button 
                                                         variant="outline-secondary" 
-                                                        onClick={() => {
-                                                            window.open(video.url, '_blank');
-                                                            handleVideoClick(video._id);
-                                                        }}
+                                                        onClick={() => handleWatchVideo(video)}
                                                         className="flex-grow-1"
                                                     >
                                                         Ver en YouTube
