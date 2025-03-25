@@ -207,17 +207,19 @@ color: #aaa; /* Color suave para el texto del placeholder */
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(5px);
   z-index: 1000;
 }
 
 .modal-wrapper {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(0);
+  transition: all 0.3s ease;
 }
 
 .modal-content {
@@ -268,25 +270,40 @@ color: #aaa; /* Color suave para el texto del placeholder */
 
 /* Input del PIN */
 .pin-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 18px;
+  width: 180px;
+  padding: 12px;
+  font-size: 20px;
   text-align: center;
-  border: 2px solid #ddd;
-  border-radius: 6px;
+  letter-spacing: 6px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
   outline: none;
-  transition: border-color 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  margin: 0 auto 15px;
+  display: block;
 }
 
 .pin-input:focus {
-  border-color: #007bff;
+  border-color: #d13bff;
+  box-shadow: 0 0 10px rgba(209, 59, 255, 0.15);
 }
 
 /* Mensaje de error */
 .error-text {
-  color: red;
-  font-size: 14px;
-  margin-top: 8px;
+  color: #ff3366;
+  font-size: 0.8rem;
+  margin: 8px 0;
+  padding: 8px;
+  background: rgba(255, 51, 102, 0.08);
+  border-radius: 6px;
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 }
 
 /* Grupo de botones */
@@ -294,35 +311,40 @@ color: #aaa; /* Color suave para el texto del placeholder */
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 /* Botones */
 .btn {
-  padding: 10px 16px;
-  font-size: 16px;
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: all 0.2s ease;
 }
 
 /* Botón Validar */
 .btn.validate {
-  background: linear-gradient(135deg, #ff8a00, #e52e71);
+  background: #d13bff;
   color: white;
+  box-shadow: 0 2px 8px rgba(209, 59, 255, 0.25);
 }
 
 .btn.validate:hover {
-  background: #db145a;
+  transform: translateY(-1px);
+  background: #c022ff;
+  box-shadow: 0 4px 12px rgba(209, 59, 255, 0.3);
 }
 
 /* Botón Cancelar */
 .btn.cancel {
-  background: #ccc;
-  color: #333;
+  background: #f5f5f5;
+  color: #666;
 }
 
 .btn.cancel:hover {
-  background: #999;
+  background: #eeeeee;
+  transform: translateY(-1px);
 }

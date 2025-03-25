@@ -46,32 +46,30 @@ const Videos = () => {
     return (
         <div className="videos-container">
             <div className="videos-card">
-                <div className="videos-form-container">
-                    <h2 className="videos-title">🎬 Gestión de Videos</h2>
+                <h2 className="videos-title">🎬 Gestión de Videos</h2>
 
-                    {/* Formulario */}
-                    <form onSubmit={handleSubmit} className="videos-form">
-                        <input 
-                            type="text" 
-                            className="videos-input" 
-                            placeholder="Nombre del video" 
-                            value={name} 
-                            onChange={(e) => setName(e.target.value)} 
-                            required 
-                        />
-                        <input 
-                            type="text" 
-                            className="videos-input" 
-                            placeholder="URL de YouTube" 
-                            value={url} 
-                            onChange={(e) => setUrl(e.target.value)} 
-                            required 
-                        />
-                        <button type="submit" className={`videos-button ${editId ? "edit" : "add"}`}>
-                            {editId ? "Actualizar Video" : "Agregar Video"}
-                        </button>
-                    </form>
-                </div>
+                {/* Formulario */}
+                <form onSubmit={handleSubmit} className="videos-form">
+                    <input 
+                        type="text" 
+                        className="videos-input" 
+                        placeholder="Nombre del video" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)} 
+                        required 
+                    />
+                    <input 
+                        type="text" 
+                        className="videos-input" 
+                        placeholder="URL de YouTube" 
+                        value={url} 
+                        onChange={(e) => setUrl(e.target.value)} 
+                        required 
+                    />
+                    <button type="submit" className={`videos-button ${editId ? "edit" : "add"}`}>
+                        {editId ? "Actualizar Video" : "Agregar Video"}
+                    </button>
+                </form>
 
                 {/* Lista de videos */}
                 <ul className="videos-list">

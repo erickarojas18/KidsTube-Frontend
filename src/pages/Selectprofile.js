@@ -9,6 +9,7 @@ const SelectProfile = () => {
   const [error, setError] = useState("");
   const [showPinModal, setShowPinModal] = useState(false);
   const [redirectPath, setRedirectPath] = useState("");
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
@@ -33,8 +34,9 @@ const SelectProfile = () => {
       });
   }, [userId]);
 
-  const handleProfileClick = () => {
-    setRedirectPath("/Playlists");
+  const handleProfileClick = (profile) => {
+    setSelectedProfile(profile);
+    setRedirectPath("/user-playlists");
     setShowPinModal(true);
     setError("");
     setPin("");
@@ -56,23 +58,30 @@ const SelectProfile = () => {
 
   const handlePinSubmit = async () => {
     try {
-      console.log("🔑 Enviando PIN:", pin);
+      if (!selectedProfile) {
+        setError("Error al seleccionar el perfil");
+        return;
+      }
 
       const response = await axios.post(
-        "http://localhost:5000/api/validate-admin-pin",
-        { userId, pin }
+        "http://localhost:5000/api/restricted-users/validate-pin",
+        { 
+          userId: selectedProfile._id,
+          pin,
+        }
       );
 
-      if (response.data.message === "PIN válido") {
-        console.log("✅ PIN correcto, redirigiendo...");
+      if (response.data && response.data.message === "PIN válido") {
+        console.log("✅ PIN validado correctamente");
+        localStorage.setItem("selectedUserId", selectedProfile._id);
         setShowPinModal(false);
         navigate(redirectPath);
       } else {
-        setError("PIN incorrecto ❌");
+        setError("PIN incorrecto. Por favor, intente nuevamente ❌");
       }
     } catch (error) {
-      setError("PIN incorrecto ❌");
-      console.error("❌ Error en la validación del PIN:", error);
+      console.error("❌ Error:", error.response?.data);
+      setError("PIN incorrecto. Por favor, intente nuevamente ❌");
     }
   };
 
@@ -88,7 +97,7 @@ const SelectProfile = () => {
             <div
               key={profile._id}
               className="profile-card"
-              onClick={handleProfileClick}
+              onClick={() => handleProfileClick(profile)}
             >
               <img
                 src={
