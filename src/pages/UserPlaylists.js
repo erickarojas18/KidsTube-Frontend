@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Button, Modal, Form, Tab, Nav } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/UserPlaylists.css";
 
 const UserPlaylists = () => {
     const [playlists, setPlaylists] = useState([]);
@@ -48,12 +49,19 @@ const UserPlaylists = () => {
 
     const fetchPlaylists = async (userId) => {
         try {
-            console.log('Obteniendo playlists para el usuario:', userId);
+            console.log('🔍 Obteniendo playlists para el usuario:', userId);
             const { data } = await axios.get(`http://localhost:5000/api/playlists/user/${userId}`);
-            console.log('Playlists obtenidas:', data);
-            setPlaylists(data || []);
+            console.log('📋 Playlists obtenidas:', data);
+            
+            // Verificar que los perfiles estén poblados
+            const playlistsWithProfiles = data.map(playlist => {
+                console.log(`Playlist "${playlist.name}" tiene ${playlist.profiles?.length || 0} perfiles:`, playlist.profiles);
+                return playlist;
+            });
+            
+            setPlaylists(playlistsWithProfiles || []);
         } catch (error) {
-            console.error("Error al obtener playlists:", error);
+            console.error("❌ Error al obtener playlists:", error);
             setPlaylists([]);
         }
     };
@@ -160,20 +168,25 @@ const UserPlaylists = () => {
         return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
     };
 
-    // Filtrar videos que coincidan con el término de búsqueda
-    const filteredVideos = selectedPlaylist?.videos?.filter(video => {
-        const searchTermLower = searchTerm.toLowerCase().trim();
-        const videoNameLower = video.name.toLowerCase();
-        return searchTermLower === '' || videoNameLower.includes(searchTermLower);
-    });
-
     // Función para manejar la búsqueda
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
 
+    // Filtrar videos que coincidan con el término de búsqueda
+    const getFilteredVideos = () => {
+        if (!selectedPlaylist?.videos) return [];
+        if (!searchTerm.trim()) return selectedPlaylist.videos;
+
+        return selectedPlaylist.videos.filter(video => {
+            const searchTermLower = searchTerm.toLowerCase().trim();
+            const videoNameLower = video.name.toLowerCase();
+            return videoNameLower.includes(searchTermLower);
+        });
+    };
+
     return (
-        <div className="container mt-4">
+        <div className="container-fluid mt-4">
             <div className="card">
                 <div className="card-header" style={{ backgroundColor: '#6f42c1', color: 'white' }}>
                     <div className="d-flex justify-content-between align-items-center">
@@ -188,17 +201,22 @@ const UserPlaylists = () => {
                 </div>
                 <div className="card-body">
                     {playlists.length > 0 ? (
-                        <div className="row g-3">
+                        <div className="playlist-container">
                             {playlists.map((playlist) => (
-                                <div key={playlist._id} className="col-md-6 col-lg-4">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h5 className="card-title">{playlist.name}</h5>
-                                            <p className="card-text text-muted">
-                                                {playlist.videos?.length || 0} videos
-                                            </p>
+                                <div key={playlist._id} className="playlist-card">
+                                    <div className="playlist-header">
+                                        <h5 className="playlist-title">{playlist.name}</h5>
+                                    </div>
+                                    <div className="playlist-content">
+                                        <div className="playlist-info">
+                                            <p>{playlist.videos?.length || 0} videos</p>
+                                        </div>
+                                        <div className="playlist-actions">
                                             <Button 
-                                                style={{ backgroundColor: '#6f42c1', borderColor: '#6f42c1' }}
+                                                style={{ 
+                                                    backgroundColor: '#6f42c1', 
+                                                    borderColor: '#6f42c1'
+                                                }}
                                                 size="sm"
                                                 onClick={() => {
                                                     setSelectedPlaylist(playlist);
@@ -238,31 +256,29 @@ const UserPlaylists = () => {
                     </div>
 
                     {history.length > 0 ? (
-                        <div className="row g-3">
+                        <div className="video-grid">
                             {history.map((item) => (
-                                <div key={item._id} className="col-md-6 col-lg-4">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h6 className="card-title">{item.videoId.name}</h6>
-                                            <div className="ratio ratio-16x9 mb-3">
-                                                <iframe
-                                                    src={getYouTubeEmbedUrl(item.videoId.url)}
-                                                    title={item.videoId.name}
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                    allowFullScreen
-                                                ></iframe>
-                                            </div>
-                                            <p className="text-muted small">
-                                                Visto el: {new Date(item.watchedAt).toLocaleString()}
-                                            </p>
-                                            <Button 
-                                                variant="outline-secondary" 
-                                                onClick={() => window.open(item.videoId.url, '_blank')}
-                                                className="w-100"
-                                            >
-                                                Ver en YouTube
-                                            </Button>
+                                <div key={item._id} className="video-card">
+                                    <div className="video-info">
+                                        <h6 className="video-title">{item.videoId.name}</h6>
+                                        <div className="ratio ratio-16x9 mb-3">
+                                            <iframe
+                                                src={getYouTubeEmbedUrl(item.videoId.url)}
+                                                title={item.videoId.name}
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
                                         </div>
+                                        <p className="video-meta">
+                                            Visto el: {new Date(item.watchedAt).toLocaleString()}
+                                        </p>
+                                        <Button 
+                                            variant="outline-secondary" 
+                                            onClick={() => window.open(item.videoId.url, '_blank')}
+                                            className="w-100"
+                                        >
+                                            Ver en YouTube
+                                        </Button>
                                     </div>
                                 </div>
                             ))}
@@ -282,7 +298,6 @@ const UserPlaylists = () => {
                     {playlistError && <div className="alert alert-danger">{playlistError}</div>}
                     {playlistSuccess && <div className="alert alert-success">{playlistSuccess}</div>}
 
-                    {/* Buscador de Videos */}
                     <div className="mb-4">
                         <Form.Group>
                             <Form.Label>Buscar Videos</Form.Label>
@@ -295,46 +310,46 @@ const UserPlaylists = () => {
                         </Form.Group>
                     </div>
 
-                    {/* Lista de Videos en la Playlist */}
-                    <div>
-                        <h5>Videos en la Playlist</h5>
-                        {filteredVideos?.length > 0 ? (
-                            <div className="row g-3">
-                                {filteredVideos.map((video) => (
-                                    <div key={video._id} className="col-md-6 col-lg-4">
-                                        <div className="card h-100">
-                                            <div className="card-body">
-                                                <h6 className="card-title">{video.name}</h6>
-                                                <div className="ratio ratio-16x9 mb-3">
-                                                    <iframe
-                                                        src={getYouTubeEmbedUrl(video.url)}
-                                                        title={video.name}
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen
-                                                    ></iframe>
-                                                </div>
-                                                <div className="d-flex gap-2">
-                                                    <Button 
-                                                        variant="outline-secondary" 
-                                                        onClick={() => handleWatchVideo(video)}
-                                                        className="flex-grow-1"
-                                                    >
-                                                        Ver en YouTube
-                                                    </Button>
-                                                </div>
+                    <h5>Videos en la Playlist</h5>
+                    {selectedPlaylist?.videos?.length > 0 ? (
+                        <>
+                            <div className="video-grid">
+                                {getFilteredVideos().map((video) => (
+                                    <div key={video._id} className="video-card">
+                                        <div className="video-info">
+                                            <h6 className="video-title">{video.name}</h6>
+                                            <div className="ratio ratio-16x9 mb-3">
+                                                <iframe
+                                                    src={getYouTubeEmbedUrl(video.url)}
+                                                    title={video.name}
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                ></iframe>
+                                            </div>
+                                            <div className="d-flex gap-2">
+                                                <Button 
+                                                    variant="outline-secondary" 
+                                                    onClick={() => handleWatchVideo(video)}
+                                                    className="flex-grow-1"
+                                                >
+                                                    Ver en YouTube
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        ) : (
-                            <p className="text-center text-muted">
-                                {searchTerm 
-                                    ? "No se encontraron videos que coincidan con la búsqueda"
-                                    : "No hay videos en esta playlist"}
-                            </p>
-                        )}
-                    </div>
+                            {getFilteredVideos().length === 0 && (
+                                <p className="text-center text-muted">
+                                    No se encontraron videos que coincidan con la búsqueda
+                                </p>
+                            )}
+                        </>
+                    ) : (
+                        <p className="text-center text-muted">
+                            No hay videos en esta playlist
+                        </p>
+                    )}
                 </Modal.Body>
             </Modal>
         </div>

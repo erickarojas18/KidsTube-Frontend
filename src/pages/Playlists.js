@@ -18,6 +18,9 @@ const Playlists = () => {
     const [showMembersModal, setShowMembersModal] = useState(false);
     const [availableVideos, setAvailableVideos] = useState([]);
     const [playlistMembers, setPlaylistMembers] = useState([]);
+    const [playlistError, setPlaylistError] = useState("");
+    const [playlistSuccess, setPlaylistSuccess] = useState("");
+    const [showAddMembersModal, setShowAddMembersModal] = useState(false);
 
     useEffect(() => {
         fetchRestrictedUsers();
@@ -220,6 +223,75 @@ const Playlists = () => {
             }
         }
     };  
+
+    const handleRemoveProfile = async (playlistId, profileId) => {
+        try {
+            await axios.delete(`http://localhost:5000/api/playlists/${playlistId}/profiles/${profileId}`);
+            
+            // Actualizar el estado local
+            setPlaylists(playlists.map(playlist => {
+                if (playlist._id === playlistId) {
+                    return {
+                        ...playlist,
+                        profiles: playlist.profiles.filter(profile => profile._id !== profileId)
+                    };
+                }
+                return playlist;
+            }));
+
+            // Actualizar la playlist seleccionada si está abierta
+            if (selectedPlaylist?._id === playlistId) {
+                setSelectedPlaylist(prev => ({
+                    ...prev,
+                    profiles: prev.profiles.filter(profile => profile._id !== profileId)
+                }));
+            }
+
+            setPlaylistSuccess("Integrante eliminado exitosamente");
+            setTimeout(() => setPlaylistSuccess(""), 3000);
+        } catch (error) {
+            console.error("Error al eliminar integrante:", error);
+            setPlaylistError("Error al eliminar el integrante");
+            setTimeout(() => setPlaylistError(""), 3000);
+        }
+    };
+
+    const handleAddProfiles = async (playlistId) => {
+        try {
+            const selectedProfiles = formData.profiles;
+            if (!selectedProfiles || selectedProfiles.length === 0) {
+                setPlaylistError("Por favor, selecciona al menos un perfil");
+                return;
+            }
+
+            const response = await axios.post(
+                `http://localhost:5000/api/playlists/${playlistId}/profiles`,
+                { profileIds: selectedProfiles }
+            );
+
+            // Actualizar el estado local
+            setPlaylists(playlists.map(playlist => {
+                if (playlist._id === playlistId) {
+                    return response.data;
+                }
+                return playlist;
+            }));
+
+            // Actualizar la playlist seleccionada si está abierta
+            if (selectedPlaylist?._id === playlistId) {
+                setSelectedPlaylist(response.data);
+            }
+
+            setFormData({ ...formData, profiles: [] });
+            setShowAddMembersModal(false);
+            setPlaylistSuccess("Integrantes agregados exitosamente");
+            setTimeout(() => setPlaylistSuccess(""), 3000);
+        } catch (error) {
+            console.error("Error al agregar integrantes:", error);
+            setPlaylistError("Error al agregar los integrantes");
+            setTimeout(() => setPlaylistError(""), 3000);
+        }
+    };
 
     return (
         <div className="container-fluid mt-4">
@@ -448,25 +520,46 @@ const Playlists = () => {
                     <Modal.Title>Integrantes de {selectedPlaylist?.name}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    {playlistMembers.length > 0 ? (
+                    {playlistError && <div className="alert alert-danger">{playlistError}</div>}
+                    {playlistSuccess && <div className="alert alert-success">{playlistSuccess}</div>}
+                    
+                    <div className="d-flex justify-content-end mb-3">
+                        <Button 
+                            style={{ backgroundColor: '#6f42c1', borderColor: '#6f42c1' }}
+                            size="sm"
+                            onClick={() => setShowAddMembersModal(true)}
+                        >
+                            <i className="fas fa-plus"></i> Agregar Integrantes
+                        </Button>
+                    </div>
+                    
+                    {selectedPlaylist?.profiles && selectedPlaylist.profiles.length > 0 ? (
                         <div className="list-group">
-                            {playlistMembers.map((member) => (
-                                <div key={member._id} className="list-group-item">
-                                    <div className="d-flex align-items-center">
-                                        <div className="flex-shrink-0">
-                                            <img
-                                                src={member.avatar || "https://via.placeholder.com/50"}
-                                                alt={member.name}
-                                                className="rounded-circle"
-                                                width="50"
-                                                height="50"
-                                            />
+                            {selectedPlaylist.profiles.map((profile) => (
+                                <div key={profile._id} className="list-group-item">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="d-flex align-items-center">
+                                            <div className="flex-shrink-0">
+                                                <img
+                                                    src={profile.avatar || "https://placehold.co/50"}
+                                                    alt={profile.name}
+                                                    className="rounded-circle"
+                                                    width="50"
+                                                    height="50"
+                                                />
+                                            </div>
+                                            <div className="flex-grow-1 ms-3">
+                                                <h6 className="mb-0">{profile.name}</h6>
+                                                <small className="text-muted">{profile.email || 'Sin correo'}</small>
+                                            </div>
                                         </div>
-                                        <div className="flex-grow-1 ms-3">
-                                            <h6 className="mb-0">{member.name}</h6>
-                                            <small className="text-muted">{member.email}</small>
-                                        </div>
+                                        <Button 
+                                            variant="outline-danger" 
+                                            size="sm"
+                                            onClick={() => handleRemoveProfile(selectedPlaylist._id, profile._id)}
+                                        >
+                                            <i className="fas fa-trash"></i> Eliminar
+                                        </Button>
                                     </div>
                                 </div>
                             ))}
@@ -474,6 +567,56 @@ const Playlists = () => {
                     ) : (
                         <p className="text-center text-muted">No hay integrantes en esta playlist</p>
                     )}
+                </Modal.Body>
+            </Modal>
+
+            {/* Modal para Agregar Integrantes */}
+            <Modal show={showAddMembersModal} onHide={() => setShowAddMembersModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Agregar Integrantes a {selectedPlaylist?.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Selecciona los Perfiles a Agregar</Form.Label>
+                            <Form.Select
+                                multiple
+                                value={formData.profiles}
+                                onChange={(e) => {
+                                    const values = Array.from(e.target.selectedOptions, option => option.value);
+                                    setFormData({ ...formData, profiles: values });
+                                }}
+                                className="form-select"
+                            >
+                                {restrictedUsers
+                                    .filter(user => !selectedPlaylist?.profiles?.some(profile => profile._id === user._id))
+                                    .map(user => (
+                                        <option key={user._id} value={user._id}>
+                                            {user.name}
+                                        </option>
+                                    ))
+                                }
+                            </Form.Select>
+                            <Form.Text className="text-muted">
+                                Para seleccionar múltiples perfiles, mantén presionado Ctrl (Cmd en Mac)
+                            </Form.Text>
+                        </Form.Group>
+
+                        <div className="d-flex justify-content-end gap-2">
+                            <Button 
+                                variant="secondary" 
+                                onClick={() => setShowAddMembersModal(false)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button 
+                                style={{ backgroundColor: '#6f42c1', borderColor: '#6f42c1' }}
+                                onClick={() => handleAddProfiles(selectedPlaylist._id)}
+                            >
+                                Agregar Integrantes
+                            </Button>
+                        </div>
+                    </Form>
                 </Modal.Body>
             </Modal>
         </div>
