@@ -124,27 +124,29 @@ const SelectProfile = () => {
       {/* Modal para ingresar PIN */}
       {showPinModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Ingrese el PIN del usuario principal</h3>
-            <input
-              type="password"
-              maxLength="6"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              className="pin-input"
-              placeholder="******"
-            />
-            {error && <p className="error-text">{error}</p>}
-            <div className="button-group">
-              <button className="btn validate" onClick={handlePinSubmit}>
-                Validar
-              </button>
-              <button
-                className="btn cancel"
-                onClick={() => setShowPinModal(false)}
-              >
-                Cancelar
-              </button>
+          <div className="modal-wrapper">
+            <div className="modal-content">
+              <h3>Ingrese el PIN</h3>
+              <input
+                type="password"
+                maxLength="6"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                className="pin-input"
+                placeholder="******"
+              />
+              {error && <p className="error-text">{error}</p>}
+              <div className="button-group">
+                <button className="btn validate" onClick={handlePinSubmit}>
+                  Validar
+                </button>
+                <button
+                  className="btn cancel"
+                  onClick={() => setShowPinModal(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -207,22 +207,55 @@ color: #aaa; /* Color suave para el texto del placeholder */
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
   z-index: 1000;
 }
 
-/* Contenedor del modal */
+.modal-wrapper {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .modal-content {
   background: white;
-  padding: 20px;
-  width: 320px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 25px;
+  width: 300px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(209, 59, 255, 0.15);
   text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: modalAppear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.modal-content h3 {
+  background: linear-gradient(135deg, #d13bff 0%, #ff71b3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  position: relative;
+  display: inline-block;
+}
+
+.modal-content h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(to right, #d13bff, #ff71b3);
+  border-radius: 2px;
 }
 
 /* Animación de aparición */
-@keyframes fadeIn {
+@keyframes modalAppear {
   from {
     transform: translateY(-20px);
     opacity: 0;
