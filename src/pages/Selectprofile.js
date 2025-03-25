@@ -43,6 +43,7 @@ const SelectProfile = () => {
   };
 
   const handleAdminProfilesClick = () => {
+    setSelectedProfile(null);
     setRedirectPath("/AdminRestricted");
     setShowPinModal(true);
     setError("");
@@ -50,6 +51,7 @@ const SelectProfile = () => {
   };
 
   const handleAdminClick = () => {
+    setSelectedProfile(null);
     setRedirectPath("/videos");
     setShowPinModal(true);
     setError("");
@@ -58,26 +60,38 @@ const SelectProfile = () => {
 
   const handlePinSubmit = async () => {
     try {
-      if (!selectedProfile) {
-        setError("Error al seleccionar el perfil");
-        return;
-      }
+      if (selectedProfile) {
+        const response = await axios.post(
+          "http://localhost:5000/api/restricted-users/validate-pin",
+          { 
+            userId: selectedProfile._id,
+            pin,
+          }
+        );
 
-      const response = await axios.post(
-        "http://localhost:5000/api/restricted-users/validate-pin",
-        { 
-          userId: selectedProfile._id,
-          pin,
+        if (response.data && response.data.message === "PIN válido") {
+          console.log("✅ PIN validado correctamente");
+          localStorage.setItem("selectedUserId", selectedProfile._id);
+          setShowPinModal(false);
+          navigate(redirectPath);
+        } else {
+          setError("PIN incorrecto. Por favor, intente nuevamente ❌");
         }
-      );
-
-      if (response.data && response.data.message === "PIN válido") {
-        console.log("✅ PIN validado correctamente");
-        localStorage.setItem("selectedUserId", selectedProfile._id);
-        setShowPinModal(false);
-        navigate(redirectPath);
       } else {
-        setError("PIN incorrecto. Por favor, intente nuevamente ❌");
+        const response = await axios.post(
+          "http://localhost:5000/api/admin/validate-pin",
+          { 
+            pin
+          }
+        );
+
+        if (response.data && response.data.isValid) {
+          console.log("✅ PIN de administrador validado correctamente");
+          setShowPinModal(false);
+          navigate(redirectPath);
+        } else {
+          setError("PIN incorrecto. Por favor, intente nuevamente ❌");
+        }
       }
     } catch (error) {
       console.error("❌ Error:", error.response?.data);
@@ -115,17 +129,14 @@ const SelectProfile = () => {
       )}
 
       {/* Botones de acción */}
-      <div className="actions">
-        <button
-          className="circle-btn"
-          onClick={() => navigate("/new-profile")}
-        >
+      <div className="button-container">
+        <button className="circle-btn" onClick={() => navigate("/new-profile")}>
           ➕
         </button>
-        <button className="circle-btn" onClick={handleAdminProfilesClick}>
+        <button className="circle-btn" onClick={() => navigate("/AdminRestricted")}>
           ⚙️
         </button>
-        <button className="circle-btn" onClick={handleAdminClick}>
+        <button className="circle-btn" onClick={() => navigate("/videos")}>
           📂
         </button>
       </div>
@@ -165,3 +176,4 @@ const SelectProfile = () => {
 };
 
 export default SelectProfile;
+

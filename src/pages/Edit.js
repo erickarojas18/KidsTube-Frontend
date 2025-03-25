@@ -75,6 +75,7 @@ const EditProfile = () => {
         {/* Sección para seleccionar el avatar */}
         <div>
           <h3>Seleccionar Avatar</h3>
+          
           <div className="avatar-selector">
             {avatars.map((avatarOption) => (
               <div key={avatarOption} className="avatar-option" onClick={() => handleAvatarSelect(avatarOption)}>

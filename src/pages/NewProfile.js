@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../newProfile.css";
 
-
 const AdminRestrictedUsers = () => {
   const [name, setName] = useState("");
   const [pin, setPin] = useState("");
@@ -42,49 +41,48 @@ const AdminRestrictedUsers = () => {
       .then(() => {
         alert("Usuario restringido agregado ✅");
         window.location.href = "http://localhost:3001/select-profile"; // Redirige a la página de selección de perfil
-
       })
       .catch((error) => {
         console.error("❌ Error al agregar usuario restringido:", error);
         alert("Error al agregar usuario restringido");
       });
   };
+
   return (
     <div className="container">
-  <h2>Agregar Nuevo Usuario</h2>
-  <input
-    type="text"
-    placeholder="Nombre Completo"
-    value={name}
-    onChange={(e) => setName(e.target.value)}
-  />
-  <input
-    type="password"
-    placeholder="PIN (6 dígitos)"
-    value={pin}
-    onChange={(e) => setPin(e.target.value)}
-  />
+      <h2>Agregar Nuevo Usuario</h2>
+      <input
+        type="text"
+        placeholder="Nombre Completo"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="PIN (6 dígitos)"
+        value={pin}
+        onChange={(e) => setPin(e.target.value)}
+      />
 
-  <h3>Selecciona un Avatar</h3>
-  <div className="profiles-grid">
-    {avatars.map((img) => (
-      <div
-        key={img}
-        className="profile-card"
-        onClick={() => setAvatar(img)}
-      >
-        <img
-          src={`/avatars/${img}`}
-          alt={img}
-          className={`profile-avatar ${avatar === img ? "selected" : ""}`}
-        />
+      <h3>Selecciona un Avatar</h3>
+      <div className="profiles-grid">
+        {avatars.map((img) => (
+          <div
+            key={img}
+            className="profile-card"
+            onClick={() => setAvatar(img)}
+          >
+            <img
+              src={`/avatars/${img}`}
+              alt={img}
+              className={`profile-avatar ${avatar === img ? "selected" : ""}`}
+            />
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
 
-  <button onClick={handleAddUser}>Agregar Usuario</button>
-</div>
-
+      <button onClick={handleAddUser}>Agregar Usuario</button>
+    </div>
   );
 };
 

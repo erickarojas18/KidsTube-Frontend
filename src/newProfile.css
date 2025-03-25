@@ -37,7 +37,6 @@ button {
 }
 
 button:hover {
- 
   transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
@@ -56,6 +55,39 @@ h3 {
   text-transform: capitalize;
 }
 
+/* Estilos para la cuadrícula de perfiles */
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.profile-card {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.profile-card:hover {
+  transform: scale(1.05);
+  border-color: #ffb6c1;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.profile-avatar.selected {
+  border: 4px solid #e52e71;
+  box-shadow: 0 0 15px rgba(229, 46, 113, 0.3);
+  transform: scale(1.1);
+}
 
 /* Responsivo */
 @media (max-width: 600px) {
@@ -66,4 +98,60 @@ h3 {
   input {
     width: 80%; /* Inputs más pequeños en móviles */
   }
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.avatar-option {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.avatar-option:hover {
+    border-color: #6f42c1;
+    transform: scale(1.05);
+}
+
+.avatar-option.selected {
+    border-color: #6f42c1;
+    background-color: rgba(111, 66, 193, 0.1);
+}
+
+.avatar-option img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    border-bottom: none;
+}
+
+.form-control:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+.btn-primary {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.btn-primary:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
 }
