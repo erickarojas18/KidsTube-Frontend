@@ -18,10 +18,14 @@ mongoose.connect('mongodb://localhost:27017/kidstube', {
 // Importar rutas
 const playlistsRouter = require('./routes/playlists');
 const videosRouter = require('./routes/videos');
+const restrictedUsersRoutes = require('./routes/restrictedUsers');
+const historyRoutes = require('./routes/history');
 
 // Rutas
 app.use('/api/playlists', playlistsRouter);
 app.use('/api/videos', videosRouter);
+app.use('/api/restricted-users', restrictedUsersRoutes);
+app.use('/api/history', historyRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
