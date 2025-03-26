@@ -110,9 +110,10 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 
 ## 👥 Autores
 
-- **Tu Nombre** - *Trabajo Inicial* - [TuUsuario](https://github.com/tu-usuario)
+- **Daniela Pereira** - *Desarrolladora Frontend* - [DanielaPereira](https://github.com/DanielaPereira)
+- **Ericka Rojas** - *Desarrolladora Frontend* - [ErickaRojas](https://github.com/ErickaRojas)
 
-## 🙏 Agradecimientos
+
 
 - React.js
 - React Bootstrap
