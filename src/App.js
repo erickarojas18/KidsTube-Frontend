@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import Videos from "./pages/Videos";
 import Login from "./pages/Login";
@@ -11,33 +11,43 @@ import Edit from "./pages/Edit";
 import Playlists from "./pages/Playlists";
 import UserPlaylists from "./pages/UserPlaylists";
 import "./App.css";
+import { useState, useEffect } from "react";
+
+// Componente para la barra de navegación
+function NavigationBar() {
+  const location = useLocation();
+  const isUserPlaylistsRoute = location.pathname === '/user-playlists';
+
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        <Navbar.Brand href="/">KidsTube</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          {isUserPlaylistsRoute ? (
+            <Nav className="ms-auto">
+              <Nav.Link href="/">Iniciar Sesión</Nav.Link>
+            </Nav>
+          ) : (
+            <Nav className="ms-auto">
+              <Nav.Link href="/">Inicio</Nav.Link>
+              <Nav.Link href="/videos">Videos</Nav.Link>
+              <Nav.Link href="/playlists">Playlists</Nav.Link>
+              <Nav.Link href="/AdminRestricted">Administración</Nav.Link>
+              <Nav.Link href="/">Iniciar Sesión</Nav.Link>
+            </Nav>
+          )}
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+}
 
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* Barra de Navegación Mejorada */}
-        <Navbar expand="lg" className="navbar-light bg-light p-2">
-          <Container className="d-flex align-items-center">
-            <Navbar.Brand as={Link} to="/" className="fw-bold text-dark d-flex align-items-center">
-              <img src="/tube.png" alt="KidsTube Logo" width="50" height="50" className="me-2 rounded-circle border border-white" />
-              KidsTube 
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="ms-auto">
-                <Nav.Link as={Link} to="/home" className="text-dark">Inicio</Nav.Link>
-                <Nav.Link as={Link} to="/videos" className="text-dark">Administración</Nav.Link>
-                <Nav.Link as={Link} to="/playlists" className="text-dark">Playlists</Nav.Link>
-                <Nav.Link as={Link} to="/register" className="text-dark">Registro</Nav.Link>
-                <Nav.Link as={Link} to="/" className="text-dark">Login</Nav.Link>
-                <Nav.Link as={Link} to="/" className="text-dark">Cerrar Sesion</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-
-        {/* Rutas */}
+        <NavigationBar />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
