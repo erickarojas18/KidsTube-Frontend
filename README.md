@@ -1,70 +1,120 @@
-# Getting Started with Create React App
+# KidsTube - Plataforma de Videos para Niños
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+KidsTube es una aplicación web diseñada específicamente para niños, que permite crear perfiles personalizados y gestionar playlists de videos educativos y entretenidos de manera segura.
 
-## Available Scripts
+## 🚀 Características Principales
 
-In the project directory, you can run:
+- **Perfiles Personalizados**: Cada niño puede tener su propio perfil con avatar personalizado
+- **Sistema de PIN**: Protección por PIN para cada perfil
+- **Playlists Personalizadas**: Creación y gestión de listas de reproducción
+- **Interfaz Amigable**: Diseño intuitivo y colorido para niños
+- **Panel de Administración**: Gestión de perfiles y contenido
+- **Sistema de Login**: Acceso seguro para padres y administradores
 
-### `npm start`
+## 🛠️ Tecnologías Utilizadas
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**:
+  - React.js
+  - React Router
+  - React Bootstrap
+  - Axios para peticiones HTTP
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Backend**:
+  - Node.js
+  - Express
+  - MongoDB
+  - JWT para autenticación
 
-### `npm test`
+## 📋 Prerrequisitos
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v14 o superior)
+- MongoDB
+- npm o yarn
 
-### `npm run build`
+## 🔧 Instalación
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/tu-usuario/KidsTube-Frontend.git
+cd KidsTube-Frontend
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Instalar dependencias:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Configurar variables de entorno:
+Crear un archivo `.env` en la raíz del proyecto con:
+```
+REACT_APP_API_URL=http://localhost:5000
+```
 
-### `npm run eject`
+4. Iniciar el servidor de desarrollo:
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🌐 Estructura del Proyecto
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+KidsTube-Frontend/
+├── src/
+│   ├── components/     # Componentes reutilizables
+│   ├── pages/         # Páginas principales
+│   ├── assets/        # Recursos estáticos
+│   ├── App.js         # Componente principal
+│   └── index.js       # Punto de entrada
+├── public/            # Archivos públicos
+└── package.json       # Dependencias y scripts
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🔐 Rutas Principales
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `/` - Página de inicio/Login
+- `/register` - Registro de nuevos usuarios
+- `/select-profile` - Selección de perfil
+- `/user-playlists` - Playlists del usuario
+- `/AdminRestricted` - Panel de administración
+- `/videos` - Gestión de videos
+- `/playlists` - Gestión de playlists
 
-## Learn More
+## 👥 Roles de Usuario
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. **Administrador**:
+   - Gestión completa de perfiles
+   - Administración de contenido
+   - Acceso al panel de control
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. **Usuario (Padre)**:
+   - Creación de perfiles para niños
+   - Gestión de PINs
+   - Acceso a playlists
 
-### Code Splitting
+3. **Perfil Niño**:
+   - Acceso a videos asignados
+   - Gestión de playlists personales
+   - Personalización de avatar
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🤝 Contribución
 
-### Analyzing the Bundle Size
+1. Fork el proyecto
+2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 📝 Licencia
 
-### Making a Progressive Web App
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 👥 Autores
 
-### Advanced Configuration
+- **Tu Nombre** - *Trabajo Inicial* - [TuUsuario](https://github.com/tu-usuario)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🙏 Agradecimientos
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- React.js
+- React Bootstrap
+- MongoDB
+- Express.js
