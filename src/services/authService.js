@@ -17,5 +17,20 @@ export const loginUser = async (credentials) => {
         body: JSON.stringify(credentials),
     });
 
-    return response.json();
+    const data = await response.json();
+
+    if (response.ok) {
+        // Guardamos el usuario o token (depende cómo responde el backend)
+        localStorage.setItem("user", JSON.stringify(data.user)); // ajusta según tu backend
+    }
+
+    return data;
+};
+
+export const logoutUser = () => {
+    localStorage.removeItem("user");
+};
+
+export const getCurrentUser = () => {
+    return JSON.parse(localStorage.getItem("user"));
 };

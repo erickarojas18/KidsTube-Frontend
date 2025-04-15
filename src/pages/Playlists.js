@@ -21,6 +21,11 @@ const Playlists = () => {
     const [playlistError, setPlaylistError] = useState("");
     const [playlistSuccess, setPlaylistSuccess] = useState("");
     const [showAddMembersModal, setShowAddMembersModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editFormData, setEditFormData] = useState({
+        name: "",
+        profiles: []
+    });
 
     useEffect(() => {
         fetchRestrictedUsers();
@@ -156,6 +161,39 @@ const Playlists = () => {
                 setError("Error al eliminar la playlist");
             }
         }
+    };
+
+    const handleEditPlaylist = async (e) => {
+        e.preventDefault();
+        try {
+            if (!editFormData.name || editFormData.profiles.length === 0) {
+                setError("Por favor, complete todos los campos requeridos");
+                return;
+            }
+
+            const response = await axios.put(`http://localhost:5000/api/playlists/${selectedPlaylist._id}`, {
+                name: editFormData.name,
+                profiles: editFormData.profiles
+            });
+
+            if (response.data) {
+                setSuccess("¡Playlist actualizada exitosamente! 🎉");
+                setShowEditModal(false);
+                fetchPlaylists();
+            }
+        } catch (error) {
+            console.error("Error al actualizar playlist:", error);
+            setError(error.response?.data?.message || "Error al actualizar la playlist");
+        }
+    };
+
+    const openEditModal = (playlist) => {
+        setSelectedPlaylist(playlist);
+        setEditFormData({
+            name: playlist.name,
+            profiles: playlist.profiles.map(profile => profile._id)
+        });
+        setShowEditModal(true);
     };
 
     const handleAddVideoToPlaylist = async (video) => {
@@ -394,6 +432,14 @@ const Playlists = () => {
                                                             Ver Integrantes
                                                         </Button>
                                                         <Button 
+                                                            variant="outline-success"
+                                                            size="sm"
+                                                            onClick={() => openEditModal(playlist)}
+                                                            className="flex-grow-1"
+                                                        >
+                                                            Editar
+                                                        </Button>
+                                                        <Button 
                                                             variant="danger" 
                                                             size="sm"
                                                             onClick={() => handleDeletePlaylist(playlist._id)}
@@ -614,6 +660,68 @@ const Playlists = () => {
                                 onClick={() => handleAddProfiles(selectedPlaylist._id)}
                             >
                                 Agregar Integrantes
+                            </Button>
+                        </div>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+
+            {/* Modal para Editar Playlist */}
+            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Editar Playlist</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {error && <div className="alert alert-danger">{error}</div>}
+                    {success && <div className="alert alert-success">{success}</div>}
+
+                    <Form onSubmit={handleEditPlaylist}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Nombre de la Playlist</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={editFormData.name}
+                                onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                                placeholder="Ej: Videos Educativos"
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Selecciona los Perfiles que tendrán acceso</Form.Label>
+                            <Form.Select
+                                multiple
+                                value={editFormData.profiles}
+                                onChange={(e) => {
+                                    const values = Array.from(e.target.selectedOptions, option => option.value);
+                                    setEditFormData({ ...editFormData, profiles: values });
+                                }}
+                                className="form-select"
+                                required
+                            >
+                                {restrictedUsers.map(user => (
+                                    <option key={user._id} value={user._id}>
+                                        {user.name}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                            <Form.Text className="text-muted">
+                                Para seleccionar múltiples perfiles, mantén presionado Ctrl (Cmd en Mac)
+                            </Form.Text>
+                        </Form.Group>
+
+                        <div className="d-flex justify-content-end gap-2">
+                            <Button 
+                                variant="secondary" 
+                                onClick={() => setShowEditModal(false)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button 
+                                style={{ backgroundColor: '#6f42c1', borderColor: '#6f42c1' }}
+                                type="submit"
+                            >
+                                Guardar Cambios
                             </Button>
                         </div>
                     </Form>

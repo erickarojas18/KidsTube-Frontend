@@ -237,57 +237,60 @@ const UserPlaylists = () => {
                 </div>
             </div>
 
-            {/* Modal de Historial */}
-            <Modal show={showHistoryModal} onHide={() => setShowHistoryModal(false)} size="xl">
-                <Modal.Header closeButton>
-                    <Modal.Title>Historial de Videos</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {historyError && <div className="alert alert-danger">{historyError}</div>}
-                    {historySuccess && <div className="alert alert-success">{historySuccess}</div>}
-                    
-                    <div className="d-flex justify-content-end mb-3">
-                        <Button 
-                            variant="outline-danger" 
-                            onClick={clearHistory}
-                        >
-                            Limpiar Historial
-                        </Button>
-                    </div>
+           {/* Modal de Historial */}
+<Modal show={showHistoryModal} onHide={() => setShowHistoryModal(false)} size="xl">
+    <Modal.Header closeButton>
+        <Modal.Title>Historial de Videos</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        {historyError && <div className="alert alert-danger">{historyError}</div>}
+        {historySuccess && <div className="alert alert-success">{historySuccess}</div>}
+        
+        <div className="d-flex justify-content-end mb-3">
+            <Button 
+                variant="outline-danger" 
+                onClick={clearHistory}
+            >
+                Limpiar Historial
+            </Button>
+        </div>
 
-                    {history.length > 0 ? (
-                        <div className="video-grid">
-                            {history.map((item) => (
-                                <div key={item._id} className="video-card">
-                                    <div className="video-info">
-                                        <h6 className="video-title">{item.videoId.name}</h6>
-                                        <div className="ratio ratio-16x9 mb-3">
-                                            <iframe
-                                                src={getYouTubeEmbedUrl(item.videoId.url)}
-                                                title={item.videoId.name}
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            ></iframe>
-                                        </div>
-                                        <p className="video-meta">
-                                            Visto el: {new Date(item.watchedAt).toLocaleString()}
-                                        </p>
-                                        <Button 
-                                            variant="outline-secondary" 
-                                            onClick={() => window.open(item.videoId.url, '_blank')}
-                                            className="w-100"
-                                        >
-                                            Ver en YouTube
-                                        </Button>
-                                    </div>
+        {history.length > 0 ? (
+            <div className="video-grid">
+                {history.map((item) => (
+                    item.videoId ? (
+                        <div key={item._id} className="video-card">
+                            <div className="video-info">
+                                <h6 className="video-title">{item.videoId.name}</h6>
+                                <div className="ratio ratio-16x9 mb-3">
+                                    <iframe
+                                        src={getYouTubeEmbedUrl(item.videoId.url)}
+                                        title={item.videoId.name}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
                                 </div>
-                            ))}
+                                <p className="video-meta">
+                                    Visto el: {new Date(item.watchedAt).toLocaleString()}
+                                </p>
+                                <Button 
+                                    variant="outline-secondary" 
+                                    onClick={() => window.open(item.videoId.url, '_blank')}
+                                    className="w-100"
+                                >
+                                    Ver en YouTube
+                                </Button>
+                            </div>
                         </div>
-                    ) : (
-                        <p className="text-center text-muted">No hay videos en el historial</p>
-                    )}
-                </Modal.Body>
-            </Modal>
+                    ) : null
+                ))}
+            </div>
+        ) : (
+            <p className="text-center text-muted">No hay videos en el historial</p>
+        )}
+    </Modal.Body>
+</Modal>
+
 
             {/* Modal para Ver Videos */}
             <Modal show={showVideoModal} onHide={() => setShowVideoModal(false)} size="xl">

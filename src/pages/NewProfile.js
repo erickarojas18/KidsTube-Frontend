@@ -40,7 +40,7 @@ const AdminRestrictedUsers = () => {
       })
       .then(() => {
         alert("Usuario restringido agregado ✅");
-        window.location.href = "http://localhost:3001/select-profile"; // Redirige a la página de selección de perfil
+        window.location.href = "http://localhost:3000/select-profile"; // Redirige a la página de selección de perfil
       })
       .catch((error) => {
         console.error("❌ Error al agregar usuario restringido:", error);

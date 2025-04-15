@@ -33,6 +33,7 @@ function NavigationBar() {
               <Nav.Link href="/">Inicio</Nav.Link>
               <Nav.Link href="/videos">Videos</Nav.Link>
               <Nav.Link href="/playlists">Playlists</Nav.Link>
+              <Nav.Link href="/Register">Registro</Nav.Link>
               <Nav.Link href="/AdminRestricted">Administración</Nav.Link>
               <Nav.Link href="/">Iniciar Sesión</Nav.Link>
             </Nav>
