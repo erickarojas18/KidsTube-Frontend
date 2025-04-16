@@ -55,36 +55,27 @@ const Playlists = () => {
 
     const fetchPlaylists = async () => {
         try {
-            console.log('Obteniendo playlists...');
-            const response = await axios.get("http://localhost:5000/api/playlists");
-            console.log('Respuesta completa:', response);
-            
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                setError("No se encontró el ID del usuario");
+                return;
+            }
+    
+            console.log('Obteniendo playlists del usuario:', userId);
+            const response = await axios.get(`http://localhost:5000/api/playlists/user/${userId}`);
+    
             if (response.data) {
                 setPlaylists(response.data);
             } else {
-                console.error('La respuesta está vacía');
                 setPlaylists([]);
             }
         } catch (error) {
             console.error("Error al obtener playlists:", error);
-            if (error.response) {
-                // El servidor respondió con un estado de error
-                console.error("Datos del error:", error.response.data);
-                console.error("Estado del error:", error.response.status);
-                setError(`Error al obtener playlists: ${error.response.data.message || 'Error del servidor'}`);
-            } else if (error.request) {
-                // La petición fue hecha pero no se recibió respuesta
-                console.error("No se recibió respuesta del servidor");
-                setError("No se pudo conectar con el servidor. Por favor, verifica que el servidor esté en ejecución.");
-            } else {
-                // Error al configurar la petición
-                console.error("Error al configurar la petición:", error.message);
-                setError("Error al realizar la petición");
-            }
+            setError("Error al obtener las playlists");
             setPlaylists([]);
         }
     };
-
+    
     const fetchRestrictedUsers = async () => {
         try {
             const userId = localStorage.getItem("userId");
@@ -128,28 +119,30 @@ const Playlists = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const userId = localStorage.getItem("userId");
+    
             if (!formData.name || formData.profiles.length === 0) {
                 setError("Por favor, complete todos los campos requeridos");
                 return;
             }
-
+    
             const response = await axios.post("http://localhost:5000/api/playlists", {
                 name: formData.name,
-                profiles: formData.profiles,
+                profiles: [...formData.profiles, userId], // Asegura que el creador esté incluido
                 videos: []
             });
-
+    
             if (response.data) {
                 setFormData({ name: "", profiles: [] });
                 setSuccess("¡Playlist creada exitosamente! 🎉");
-                fetchPlaylists();
+                fetchPlaylists(); // recargar listas
             }
         } catch (error) {
             console.error("Error al crear playlist:", error);
             setError(error.response?.data?.message || "Error al crear la playlist");
         }
     };
-
+    
     const handleDeletePlaylist = async (playlistId) => {
         if (window.confirm("¿Está seguro de eliminar esta playlist?")) {
             try {
