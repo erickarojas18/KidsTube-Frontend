@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/authService";
 import "../login.css"; // Importa el CSS
 
 const Login = () => {
@@ -23,38 +24,20 @@ const Login = () => {
     try {
       console.log("Datos enviados al backend:", formData);
   
-      const response = await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      // Usar el servicio de autenticación
+      const responseData = await loginUser(formData);
   
-      const responseData = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(responseData.message || "Error en el login ❌");
+      if (responseData.error) {
+        throw new Error(responseData.error || "Error en el login ❌");
       }
   
       console.log("Respuesta completa del backend:", responseData);
-      console.log("Usuario recibido:", responseData.user);
-  
-      // Guardar datos en localStorage
-      localStorage.setItem("token", responseData.token);
-      localStorage.setItem("user", JSON.stringify(responseData.user));
-  
-      // Extraer el userId de forma flexible
-      const userId = responseData.user?._id || responseData.user?.id || null;
-      if (userId) {
-        localStorage.setItem("userId", userId);
-        console.log("User ID guardado en localStorage:", userId);
-      } else {
-        console.warn("No se encontró _id ni id en el usuario.");
-      }
-  
-      // Redirigir a select-profile
-      navigate("select-profile"); // Actualiza aquí la URL
+      
+      // Si el login fue exitoso, redirigir a la página principal
+      navigate("/");
     } catch (error) {
-      setError(error.message);
+      console.error("Error en el login:", error);
+      setError(error.message || "Error al iniciar sesión. Por favor, intente nuevamente.");
     } finally {
       setLoading(false);
     }

@@ -10,6 +10,7 @@ import SelectProfile from "./pages/Selectprofile";
 import Edit from "./pages/Edit";
 import Playlists from "./pages/Playlists";
 import UserPlaylists from "./pages/UserPlaylists";
+import VerifyEmail from "./pages/VerifyEmail";
 import "./App.css";
 import { useState, useEffect } from "react";
 
@@ -17,6 +18,7 @@ import { useState, useEffect } from "react";
 function NavigationBar() {
   const location = useLocation();
   const isUserPlaylistsRoute = location.pathname === '/user-playlists';
+  const isVerifyEmailRoute = location.pathname === '/verify-email';
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
@@ -24,9 +26,9 @@ function NavigationBar() {
         <Navbar.Brand href="/">KidsTube</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          {isUserPlaylistsRoute ? (
+          {isUserPlaylistsRoute || isVerifyEmailRoute ? (
             <Nav className="ms-auto">
-              <Nav.Link href="/">Iniciar Sesión</Nav.Link>
+              <Nav.Link href="/login">Iniciar Sesión</Nav.Link>
             </Nav>
           ) : (
             <Nav className="ms-auto">
@@ -35,7 +37,7 @@ function NavigationBar() {
               <Nav.Link href="/playlists">Playlists</Nav.Link>
               <Nav.Link href="/Register">Registro</Nav.Link>
               <Nav.Link href="/AdminRestricted">Administración</Nav.Link>
-              <Nav.Link href="/">Iniciar Sesión</Nav.Link>
+              <Nav.Link href="/login">Iniciar Sesión</Nav.Link>
             </Nav>
           )}
         </Navbar.Collapse>
@@ -47,21 +49,20 @@ function NavigationBar() {
 function App() {
   return (
     <Router>
-      <div className="App">
-        <NavigationBar />
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/videos" element={<Videos />} />
-          <Route path="/select-profile" element={<SelectProfile />} />
-          <Route path="/new-profile" element={<NewProfile />} />
-          <Route path="/AdminRestricted" element={<AdminRestrictedUsers />} />
-          <Route path="/edit/:profileId" element={<Edit/>} />
-          <Route path="/playlists" element={<Playlists />} />
-          <Route path="/user-playlists" element={<UserPlaylists />} />
-        </Routes>
-      </div>
+      <NavigationBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/AdminRestricted" element={<AdminRestrictedUsers />} />
+        <Route path="/new-profile" element={<NewProfile />} />
+        <Route path="/select-profile" element={<SelectProfile />} />
+        <Route path="/edit/:id" element={<Edit />} />
+        <Route path="/playlists" element={<Playlists />} />
+        <Route path="/user-playlists/:userId" element={<UserPlaylists />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+      </Routes>
     </Router>
   );
 }

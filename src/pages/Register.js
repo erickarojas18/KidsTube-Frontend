@@ -41,6 +41,12 @@ const Register = () => {
       return;
     }
 
+    if (!/^\d{8,15}$/.test(formData.phone)) {
+      alert("El número de teléfono debe tener entre 8 y 15 dígitos ❌");
+      return;
+    }
+    
+
     try {
       const response = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",

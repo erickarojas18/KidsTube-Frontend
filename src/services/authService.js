@@ -27,10 +27,21 @@ export const loginUser = async (credentials) => {
     return data;
 };
 
+export const verifyEmail = async (token) => {
+    const response = await fetch(`${API_URL}/verify-email?token=${token}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    return response.json();
+};
+
 export const logoutUser = () => {
     localStorage.removeItem("user");
 };
 
 export const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
+    const userStr = localStorage.getItem("user");
+    if (userStr) return JSON.parse(userStr);
+    return null;
 };
