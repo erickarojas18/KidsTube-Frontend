@@ -36,7 +36,7 @@ const SelectProfile = () => {
 
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
-    setRedirectPath("/user-playlists");
+    setRedirectPath("/user-playlists/:userId");
     setShowPinModal(true);
     setError("");
     setPin("");

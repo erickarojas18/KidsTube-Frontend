@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthForm from "../components/AuthForm";
 import "../register.css";
 
 const Register = () => {
@@ -16,6 +15,8 @@ const Register = () => {
     country: "",
     birthdate: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,25 +47,39 @@ const Register = () => {
       return;
     }
     
+    setLoading(true);
+    setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/register", {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
+            pin: formData.pin,
+            name: formData.name,        
+            lastname: formData.lastname, 
+            country: formData.country,
+            birthdate: formData.birthdate 
+          }),
+          
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registro exitoso 🎉");
-        navigate("/");
+        alert("Registro exitoso,verifique su correo. 🎉");
+        navigate("/login");
       } else {
         alert(data.message || "Error en el registro ❌");
       }
     } catch (error) {
       console.error("Error en el registro:", error);
       alert("Hubo un problema con el servidor ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,21 +87,92 @@ const Register = () => {
     <div className="register-container">
       <div className="register-box">
         <h2 className="register-title">Registro</h2>
-        <AuthForm
-          fields={[
-            { label: "Correo Electrónico", type: "email", name: "email", value: formData.email, onChange: handleChange, required: true },
-            { label: "Contraseña", type: "password", name: "password", value: formData.password, onChange: handleChange, required: true },
-            { label: "Repetir Contraseña", type: "password", name: "confirmPassword", value: formData.confirmPassword, onChange: handleChange, required: true },
-            { label: "Número Telefónico", type: "tel", name: "phone", value: formData.phone, onChange: handleChange, required: true },
-            { label: "PIN (6 dígitos)", type: "password", name: "pin", value: formData.pin, onChange: handleChange, required: true },
-            { label: "Nombre", type: "text", name: "name", value: formData.name, onChange: handleChange, required: true },
-            { label: "Apellidos", type: "text", name: "lastname", value: formData.lastname, onChange: handleChange, required: true },
-            { label: "País", type: "text", name: "country", value: formData.country, onChange: handleChange, required: false },
-            { label: "Fecha de Nacimiento", type: "date", name: "birthdate", value: formData.birthdate, onChange: handleChange, required: true },
-          ]}
-          onSubmit={handleSubmit}
-          buttonText="Registrarse"
-        />
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+          <div className="form-row">
+            <input
+              type="email"
+              name="email"
+              placeholder="Correo Electrónico"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Repetir Contraseña"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Número Telefónico"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <input
+              type="password"
+              name="pin"
+              placeholder="PIN (6 dígitos)"
+              value={formData.pin}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="name"
+              placeholder="Nombre"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <input
+              type="text"
+              name="lastname"
+              placeholder="Apellidos"
+              value={formData.lastname}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="country"
+              placeholder="País"
+              value={formData.country}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <input
+              type="date"
+              name="birthdate"
+              value={formData.birthdate}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" disabled={loading}>
+            {loading ? "Cargando..." : "Registrarse"}
+          </button>
+        </form>
       </div>
     </div>
   );

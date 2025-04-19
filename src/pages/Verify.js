@@ -1,5 +1,3 @@
-// src/pages/Verify.jsx o donde manejes tus rutas
-
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,19 +12,24 @@ const Verify = () => {
     const token = params.get("token");
 
     if (!token) {
-      setStatus("Token no válido.");
+      setStatus("❌ Token no válido.");
       return;
     }
 
     axios
-      .get(`http://localhost:5000/api/verify?token=${token}`) // ← Cambia el puerto si tu backend está en otro
-      .then((res) => {
-        setStatus("Cuenta verificada con éxito. Redirigiendo...");
-        setTimeout(() => navigate("/login"), 2000); // redirige al login después de 2s
+      .get(`http://localhost:5000/api/auth/verify?token=${token}`)
+      .then(() => {
+        setStatus("✅ Cuenta verificada con éxito. Redirigiendo al login...");
+        setTimeout(() => navigate("/login"), 3000);
       })
       .catch((err) => {
-        console.error(err);
-        setStatus("Hubo un problema al verificar tu cuenta.");
+        console.error("Error al verificar:", err);
+
+        if (err.response?.data?.message) {
+          setStatus(`❌ ${err.response.data.message}`);
+        } else {
+          setStatus("❌ Ocurrió un error inesperado al verificar la cuenta.");
+        }
       });
   }, [location, navigate]);
 

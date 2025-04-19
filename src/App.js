@@ -11,6 +11,7 @@ import Edit from "./pages/Edit";
 import Playlists from "./pages/Playlists";
 import UserPlaylists from "./pages/UserPlaylists";
 import VerifyEmail from "./pages/VerifyEmail";
+import Verify  from "./pages/Verify";
 import "./App.css";
 import { useState, useEffect } from "react";
 
@@ -32,7 +33,7 @@ function NavigationBar() {
             </Nav>
           ) : (
             <Nav className="ms-auto">
-              <Nav.Link href="/">Inicio</Nav.Link>
+              <Nav.Link href="/login">Inicio</Nav.Link>
               <Nav.Link href="/videos">Videos</Nav.Link>
               <Nav.Link href="/playlists">Playlists</Nav.Link>
               <Nav.Link href="/Register">Registro</Nav.Link>
@@ -51,7 +52,6 @@ function App() {
     <Router>
       <NavigationBar />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/videos" element={<Videos />} />
@@ -62,6 +62,8 @@ function App() {
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/user-playlists/:userId" element={<UserPlaylists />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify" element={<Verify />} />
+
       </Routes>
     </Router>
   );
