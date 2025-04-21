@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import countries from "world-countries";
 import "../register.css";
+
+const countryOptions = countries.map((country) => ({
+  value: country.cca2,
+  label: country.name.common,
+}));
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,6 +27,10 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCountryChange = (selectedOption) => {
+    setFormData({ ...formData, country: selectedOption.label }); // o .value si prefieres el código
   };
 
   const handleSubmit = async () => {
@@ -46,7 +57,7 @@ const Register = () => {
       alert("El número de teléfono debe tener entre 8 y 15 dígitos ❌");
       return;
     }
-    
+
     setLoading(true);
     setError("");
 
@@ -55,22 +66,21 @@ const Register = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            phone: formData.phone,
-            pin: formData.pin,
-            name: formData.name,        
-            lastname: formData.lastname, 
-            country: formData.country,
-            birthdate: formData.birthdate 
-          }),
-          
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone,
+          pin: formData.pin,
+          name: formData.name,
+          lastname: formData.lastname,
+          country: formData.country,
+          birthdate: formData.birthdate,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registro exitoso,verifique su correo. 🎉");
+        alert("Registro exitoso, verifique su correo. 🎉");
         navigate("/login");
       } else {
         alert(data.message || "Error en el registro ❌");
@@ -151,14 +161,17 @@ const Register = () => {
               onChange={handleChange}
               required
             />
-            <input
-              type="text"
+            <Select
               name="country"
-              placeholder="País"
-              value={formData.country}
-              onChange={handleChange}
-              required
+              options={countryOptions}
+              value={countryOptions.find(option => option.label === formData.country)}
+              onChange={handleCountryChange}
+              placeholder="Selecciona un país..."
+              isSearchable
+              className="country-select"
+              classNamePrefix="react-select"
             />
+
           </div>
           <div className="form-row">
             <input
