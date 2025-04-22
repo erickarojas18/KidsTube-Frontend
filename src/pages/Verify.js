@@ -18,13 +18,12 @@ const Verify = () => {
 
     axios
       .get(`http://localhost:5000/api/auth/verify?token=${token}`)
-      .then(() => {
-        setStatus("✅ Cuenta verificada con éxito. Redirigiendo al login...");
+      .then((res) => {
+        setStatus(`✅ ${res.data.message} Redirigiendo al login...`);
         setTimeout(() => navigate("/login"), 3000);
       })
       .catch((err) => {
         console.error("Error al verificar:", err);
-
         if (err.response?.data?.message) {
           setStatus(`❌ ${err.response.data.message}`);
         } else {
