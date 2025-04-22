@@ -49,7 +49,7 @@ const Login = () => {
             console.log("✅ Respuesta completa del backend:", data);
     
             localStorage.setItem('token', data.token);
-            localStorage.setItem('userId', data.userId);
+            localStorage.setItem('userId', data.user._id);
             navigate('/select-profile');
         } catch (error) {
             console.error('Error en el login:', error);
