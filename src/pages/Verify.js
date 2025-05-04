@@ -25,9 +25,9 @@ const Verify = () => {
       .catch((err) => {
         console.error("Error al verificar:", err);
         if (err.response?.data?.message) {
-          setStatus(`❌ ${err.response.data.message}`);
+          setStatus(` ${err.response.data.message}`);
         } else {
-          setStatus("❌ Ocurrió un error inesperado al verificar la cuenta.");
+          setStatus(" Ocurrió un error inesperado al verificar la cuenta.");
         }
       });
   }, [location, navigate]);

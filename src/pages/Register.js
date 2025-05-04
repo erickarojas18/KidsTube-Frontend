@@ -53,11 +53,11 @@ const Register = () => {
       return;
     }
 
-    if (!/^\d{8,15}$/.test(formData.phone)) {
-      alert("El número de teléfono debe tener entre 8 y 15 dígitos ❌");
+    if (!/^\+?\d{8,15}$/.test(formData.phone)) {
+      alert("El número de teléfono debe tener entre 8 y 15 dígitos");
       return;
     }
-
+    
     setLoading(true);
     setError("");
 
