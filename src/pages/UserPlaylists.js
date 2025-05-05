@@ -4,6 +4,17 @@ import axios from "axios";
 import { Button, Modal, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/UserPlaylists.css";
+import { gql, useQuery } from '@apollo/client';  // Importa Apollo Client
+
+const GET_VIDEOS = gql`
+  query GetVideos {
+    videos {
+      id
+      name
+      url
+    }
+  }
+`;
 
 const UserPlaylists = () => {
     const [playlists, setPlaylists] = useState([]);
@@ -29,7 +40,6 @@ const UserPlaylists = () => {
 
         fetchPlaylists(selectedUserId);
         fetchUserName(selectedUserId);
-        fetchAvailableVideos();
         fetchHistory(selectedUserId);
     }, [navigate]);
 
@@ -53,7 +63,6 @@ const UserPlaylists = () => {
             const { data } = await axios.get(`http://localhost:5000/api/playlists/user/${userId}`);
             console.log('📋 Playlists obtenidas:', data);
             
-            // Verificar que los perfiles estén poblados
             const playlistsWithProfiles = data.map(playlist => {
                 console.log(`Playlist "${playlist.name}" tiene ${playlist.profiles?.length || 0} perfiles:`, playlist.profiles);
                 return playlist;
@@ -63,18 +72,6 @@ const UserPlaylists = () => {
         } catch (error) {
             console.error("❌ Error al obtener playlists:", error);
             setPlaylists([]);
-        }
-    };
-
-    const fetchAvailableVideos = async () => {
-        try {
-            console.log('Obteniendo videos disponibles...');
-            const { data } = await axios.get("http://localhost:5000/api/videos");
-            console.log('Videos obtenidos:', data);
-            setAvailableVideos(data || []);
-        } catch (error) {
-            console.error("Error al obtener videos disponibles:", error);
-            setAvailableVideos([]);
         }
     };
 
@@ -175,15 +172,27 @@ const UserPlaylists = () => {
 
     // Filtrar videos que coincidan con el término de búsqueda
     const getFilteredVideos = () => {
-        if (!selectedPlaylist?.videos) return [];
-        if (!searchTerm.trim()) return selectedPlaylist.videos;
+        if (!availableVideos) return [];
+        if (!searchTerm.trim()) return availableVideos;
 
-        return selectedPlaylist.videos.filter(video => {
+        return availableVideos.filter(video => {
             const searchTermLower = searchTerm.toLowerCase().trim();
             const videoNameLower = video.name.toLowerCase();
             return videoNameLower.includes(searchTermLower);
         });
     };
+
+    // Consulta de GraphQL con Apollo Client
+    const { data: videoData, loading: loadingVideos, error: errorVideos } = useQuery(GET_VIDEOS);
+
+    useEffect(() => {
+        if (videoData?.videos) {
+            setAvailableVideos(videoData.videos);
+        }
+    }, [videoData]);
+
+    if (loadingVideos) return <p>Cargando videos...</p>;
+    if (errorVideos) return <p>Error al cargar videos.</p>;
 
     return (
         <div className="container-fluid mt-4">
@@ -237,60 +246,59 @@ const UserPlaylists = () => {
                 </div>
             </div>
 
-           {/* Modal de Historial */}
-<Modal show={showHistoryModal} onHide={() => setShowHistoryModal(false)} size="xl">
-    <Modal.Header closeButton>
-        <Modal.Title>Historial de Videos</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        {historyError && <div className="alert alert-danger">{historyError}</div>}
-        {historySuccess && <div className="alert alert-success">{historySuccess}</div>}
-        
-        <div className="d-flex justify-content-end mb-3">
-            <Button 
-                variant="outline-danger" 
-                onClick={clearHistory}
-            >
-                Limpiar Historial
-            </Button>
-        </div>
+            {/* Modal de Historial */}
+            <Modal show={showHistoryModal} onHide={() => setShowHistoryModal(false)} size="xl">
+                <Modal.Header closeButton>
+                    <Modal.Title>Historial de Videos</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {historyError && <div className="alert alert-danger">{historyError}</div>}
+                    {historySuccess && <div className="alert alert-success">{historySuccess}</div>}
 
-        {history.length > 0 ? (
-            <div className="video-grid">
-                {history.map((item) => (
-                    item.videoId ? (
-                        <div key={item._id} className="video-card">
-                            <div className="video-info">
-                                <h6 className="video-title">{item.videoId.name}</h6>
-                                <div className="ratio ratio-16x9 mb-3">
-                                    <iframe
-                                        src={getYouTubeEmbedUrl(item.videoId.url)}
-                                        title={item.videoId.name}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
-                                </div>
-                                <p className="video-meta">
-                                    Visto el: {new Date(item.watchedAt).toLocaleString()}
-                                </p>
-                                <Button 
-                                    variant="outline-secondary" 
-                                    onClick={() => window.open(item.videoId.url, '_blank')}
-                                    className="w-100"
-                                >
-                                    Ver en YouTube
-                                </Button>
-                            </div>
+                    <div className="d-flex justify-content-end mb-3">
+                        <Button 
+                            variant="outline-danger" 
+                            onClick={clearHistory}
+                        >
+                            Limpiar Historial
+                        </Button>
+                    </div>
+
+                    {history.length > 0 ? (
+                        <div className="video-grid">
+                            {history.map((item) => (
+                                item.videoId ? (
+                                    <div key={item._id} className="video-card">
+                                        <div className="video-info">
+                                            <h6 className="video-title">{item.videoId.name}</h6>
+                                            <div className="ratio ratio-16x9 mb-3">
+                                                <iframe
+                                                    src={getYouTubeEmbedUrl(item.videoId.url)}
+                                                    title={item.videoId.name}
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                ></iframe>
+                                            </div>
+                                            <p className="video-meta">
+                                                Visto el: {new Date(item.watchedAt).toLocaleString()}
+                                            </p>
+                                            <Button 
+                                                variant="outline-secondary" 
+                                                onClick={() => window.open(item.videoId.url, '_blank')}
+                                                className="w-100"
+                                            >
+                                                Ver en YouTube
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : null
+                            ))}
                         </div>
-                    ) : null
-                ))}
-            </div>
-        ) : (
-            <p className="text-center text-muted">No hay videos en el historial</p>
-        )}
-    </Modal.Body>
-</Modal>
-
+                    ) : (
+                        <p className="text-center text-muted">No hay videos en el historial</p>
+                    )}
+                </Modal.Body>
+            </Modal>
 
             {/* Modal para Ver Videos */}
             <Modal show={showVideoModal} onHide={() => setShowVideoModal(false)} size="xl">
@@ -318,7 +326,7 @@ const UserPlaylists = () => {
                         <>
                             <div className="video-grid">
                                 {getFilteredVideos().map((video) => (
-                                    <div key={video._id} className="video-card">
+                                    <div key={video.id} className="video-card">
                                         <div className="video-info">
                                             <h6 className="video-title">{video.name}</h6>
                                             <div className="ratio ratio-16x9 mb-3">
@@ -329,29 +337,29 @@ const UserPlaylists = () => {
                                                     allowFullScreen
                                                 ></iframe>
                                             </div>
-                                            <div className="d-flex gap-2">
+                                            <div className="d-flex justify-content-between">
                                                 <Button 
-                                                    variant="outline-secondary" 
+                                                    variant="outline-info" 
                                                     onClick={() => handleWatchVideo(video)}
-                                                    className="flex-grow-1"
+                                                    size="sm"
                                                 >
-                                                    Ver en YouTube
+                                                    Ver Video
+                                                </Button>
+                                                <Button 
+                                                    variant="outline-success"
+                                                    onClick={() => handleAddVideoToPlaylist(video)}
+                                                    size="sm"
+                                                >
+                                                    Agregar a Playlist
                                                 </Button>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            {getFilteredVideos().length === 0 && (
-                                <p className="text-center text-muted">
-                                    No se encontraron videos que coincidan con la búsqueda
-                                </p>
-                            )}
                         </>
                     ) : (
-                        <p className="text-center text-muted">
-                            No hay videos en esta playlist
-                        </p>
+                        <p className="text-center text-muted">No hay videos en esta playlist</p>
                     )}
                 </Modal.Body>
             </Modal>
@@ -359,4 +367,4 @@ const UserPlaylists = () => {
     );
 };
 
-export default UserPlaylists; 
+export default UserPlaylists;
