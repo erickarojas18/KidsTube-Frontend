@@ -1,50 +1,85 @@
+/* Contenedor principal centrado */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
 /* Sección de selección de avatares */
-.avatar-selector {
+.edit-profile-avatar-selector {
   display: flex;
-  justify-content: center;
-  gap: 10px; /* Espacio más pequeño entre avatares */
-  flex-wrap: wrap;
-  max-width: 400px; /* Limita el ancho para que se acomoden bien */
-  margin: 0 auto 20px auto; /* Centrar la sección */
+  flex-wrap: wrap; /* Que se acomoden si hay muchos */
+  justify-content: center; /* Centrado horizontal */
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto 20px auto;
 }
 
 /* Avatar thumbnail */
-.avatar-option {
+.edit-profile-avatar-option {
   position: relative;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.avatar-option:hover {
-  transform: scale(1.05);
+.edit-profile-avatar-option:hover {
+  transform: scale(1.2);
 }
 
-.avatar-thumbnail {
-  width: 50px; /* Reducido de 80px a 50px */
-  height: 50px; /* Reducido de 80px a 50px */
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid transparent; /* Reducción del borde */
-  transition: all 0.3s ease;
-}
-
-.avatar-thumbnail.selected {
-  border-color: #007BFF; /* Borde azul cuando está seleccionado */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
-}
-
-/* Vista previa del avatar seleccionado */
-.avatar-preview {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.avatar-preview-img {
-  width: 100px; /* Reducido de 150px a 100px */
+.edit-profile-avatar-thumbnail {
+  width: 100px;
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #007BFF;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.edit-profile-avatar-thumbnail.selected {
+  border-color: #007BFF;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
+}
+
+/* Estilo base de los botones */
+.edit-profile-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.edit-profile-button {
+  font-size: 18px;
+  padding: 15px 25px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 200px; /* Todos mismo ancho */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-profile-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo del botón cancelar */
+.edit-profile-cancel-button {
+  background-color: #f44336;
+}
+
+.edit-profile-cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Inputs de texto */
+input[type="text"] {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px auto;
+  display: block;
+  padding: 10px;
+  font-size: 16px;
 }

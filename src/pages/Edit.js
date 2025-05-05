@@ -49,7 +49,7 @@ const EditProfile = () => {
   };
 
   const handleAvatarSelect = (selectedAvatar) => {
-    setAvatar(selectedAvatar); // Establece el avatar seleccionado
+    setAvatar(selectedAvatar);
   };
 
   return (
@@ -72,34 +72,32 @@ const EditProfile = () => {
           maxLength="6"
         />
 
-        {/* Sección para seleccionar el avatar */}
         <div>
           <h3>Seleccionar Avatar</h3>
-          
-          <div className="avatar-selector">
+          <div className="edit-profile-avatar-selector">
             {avatars.map((avatarOption) => (
-              <div key={avatarOption} className="avatar-option" onClick={() => handleAvatarSelect(avatarOption)}>
+              <div key={avatarOption} className="edit-profile-avatar-option" onClick={() => handleAvatarSelect(avatarOption)}>
                 <img 
                   src={`/avatars/${avatarOption}`} 
                   alt={avatarOption} 
-                  className={`avatar-thumbnail ${avatar === avatarOption ? 'selected' : ''}`}
+                  className={`edit-profile-avatar-thumbnail ${avatar === avatarOption ? 'selected' : ''}`}
                 />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Vista previa del avatar seleccionado */}
-        {avatar && (
-          <div className="avatar-preview">
-            <h4>Vista previa del Avatar</h4>
-            <img src={`/avatars/${avatar}`} alt="Avatar seleccionado" className="avatar-preview-img" />
-          </div>
-        )}
-
-        <button type="submit">💾 Guardar Cambios</button>
+        <div className="edit-profile-buttons-container">
+          <button type="submit" className="edit-profile-button">💾 Guardar Cambios</button>
+          <button
+            type="button"
+            className="edit-profile-button edit-profile-cancel-button"
+            onClick={() => navigate("/AdminRestricted")}
+          >
+            ⬅️ Cancelar
+          </button>
+        </div>
       </form>
-      <button onClick={() => navigate("/AdminRestricted")}>⬅️ Cancelar</button>
     </div>
   );
 };
