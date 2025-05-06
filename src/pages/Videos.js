@@ -37,41 +37,44 @@ const Videos = () => {
       )}&key=${apiKey}&type=video&maxResults=${maxResults}`
     );
     const data = await response.json();
-    return data.items.map((item) => ({
+    const results = data.items.map((item) => ({
       id: item.id.videoId,
       name: item.snippet.title,
       url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
     }));
+    setVideoList(results);
   };
 
   const handleSearch = async () => {
     if (searchTerm.trim() === "") return;
-    const results = await searchYouTubeVideos(searchTerm);
-    setVideoList(results);
+    await searchYouTubeVideos(searchTerm);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (editId) {
-      // Actualizar video
       await updateVideo(editId, { name });
       setEditId(null);
-      setIsEditing(false); // Desactivar modo de edición
+      setIsEditing(false);
     }
-    setName(""); // Limpiar el campo de texto
-    refetch(); // Refrescar la lista de videos
+    setName("");
+    refetch();
   };
 
   const handleEdit = (video) => {
-    setEditId(video.id); // Establecer el ID del video que se está editando
-    setName(video.name); // Establecer el nombre del video en el campo de texto
-    setIsEditing(true); // Activar el modo de edición
+    setEditId(video.id);
+    setName(video.name);
+    setIsEditing(true);
   };
 
   const handleAddFromYouTube = async (video) => {
-    await createVideo({ name: video.name, url: video.url });
-    alert("Video agregado correctamente");
-    refetch();
+    try {
+      await createVideo({ name: video.name, url: video.url });
+      alert("Video agregado correctamente");
+      refetch();
+    } catch (error) {
+      alert("Error al guardar el video.");
+    }
   };
 
   const getYouTubeEmbedUrl = (url) => {
@@ -104,7 +107,6 @@ const Videos = () => {
           </button>
         </div>
 
-        {/* Mostrar formulario de edición solo cuando estamos en modo de edición */}
         {isEditing && (
           <form onSubmit={handleSubmit} className="videos-form">
             <input
@@ -127,38 +129,57 @@ const Videos = () => {
           <p>Cargando videos...</p>
         ) : (
           <div className="videos-grid">
-            {videoList.map((video) => (
-              <div key={video.id} className="videos-item">
-                <div className="video-content">
-                  <strong>{video.name}</strong>
-                  <div className="video-frame">
-                    {getYouTubeEmbedUrl(video.url) ? (
-                      <iframe
-                        src={getYouTubeEmbedUrl(video.url)}
-                        title={video.name}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
+            {videoList.map((video) => {
+              const isSaved = allVideosData?.videos.some((v) => v.url === video.url);
+              return (
+                <div key={video.id} className="videos-item">
+                  <div className="video-content">
+                    <strong>{video.name}</strong>
+                    <div className="video-frame">
+                      {getYouTubeEmbedUrl(video.url) ? (
+                        <iframe
+                          src={getYouTubeEmbedUrl(video.url)}
+                          title={video.name}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      ) : (
+                        <p>URL de video no válida</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="videos-actions">
+                    {!isSaved ? (
+                      <button
+                        className="videos-button add"
+                        onClick={() => handleAddFromYouTube(video)}
+                      >
+                        💾 Guardar video
+                      </button>
                     ) : (
-                      <p>URL de video no válida</p>
+                      <>
+                        <button
+                          className="videos-button edit"
+                          onClick={() => handleEdit(video)}
+                        >
+                          ✏️ Editar
+                        </button>
+                        <button
+                          className="videos-button delete"
+                          onClick={() =>
+                            deleteVideo(video.id).then(() => refetch())
+                          }
+                        >
+                          🗑 Eliminar
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
-
-                <div className="videos-actions">
-                  <button className="videos-button edit" onClick={() => handleEdit(video)}>
-                    ✏️ Editar
-                  </button>
-                  <button
-                    className="videos-button delete"
-                    onClick={() => deleteVideo(video.id).then(() => refetch())}
-                  >
-                    🗑 Eliminar
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
