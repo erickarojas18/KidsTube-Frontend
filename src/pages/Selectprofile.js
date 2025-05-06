@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "../selectProfile.css"; // Asegúrate de que el archivo CSS está en la ruta correcta
+import { gql, useQuery } from "@apollo/client";
+import "../selectProfile.css";
+
+const GET_RESTRICTED_USERS = gql`
+  query GetRestrictedUsers($parentUser: ID!) {
+    restrictedUsers(parentUser: $parentUser) {
+      id
+      name
+      avatar
+    }
+  }
+`;
 
 const SelectProfile = () => {
-  const [profiles, setProfiles] = useState([]);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [showPinModal, setShowPinModal] = useState(false);
@@ -14,25 +23,13 @@ const SelectProfile = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
-  useEffect(() => {
-    if (!userId) {
-      console.warn("⚠️ No se encontró un userId en localStorage");
-      return;
-    }
+  // Consulta GraphQL con Apollo Client
+  const { data, loading, error: gqlError } = useQuery(GET_RESTRICTED_USERS, {
+    variables: { parentUser: userId },
+    skip: !userId,
+  });
 
-    axios
-      .get(`http://localhost:5000/api/restricted-users/${userId}`)
-      .then((response) => {
-        if (response.data && Array.isArray(response.data)) {
-          setProfiles(response.data);
-        } else {
-          console.warn("⚠️ La respuesta no contiene un arreglo de perfiles.");
-        }
-      })
-      .catch((error) => {
-        console.error("❌ Error al obtener perfiles:", error);
-      });
-  }, [userId]);
+  const profiles = data?.restrictedUsers || [];
 
   const handleProfileClick = (profile) => {
     setSelectedProfile(profile);
@@ -61,40 +58,40 @@ const SelectProfile = () => {
   const handlePinSubmit = async () => {
     try {
       if (selectedProfile) {
-        const response = await axios.post(
-          "http://localhost:5000/api/restricted-users/validate-pin",
-          { 
-            userId: selectedProfile._id,
+        const response = await fetch("http://localhost:5000/api/restricted-users/validate-pin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: selectedProfile.id,
             pin,
-          }
-        );
+          }),
+        });
 
-        if (response.data && response.data.message === "PIN válido") {
-          console.log("✅ PIN validado correctamente");
-          localStorage.setItem("selectedUserId", selectedProfile._id);
+        const result = await response.json();
+        if (result.message === "PIN válido") {
+          localStorage.setItem("selectedUserId", selectedProfile.id);
           setShowPinModal(false);
           navigate(redirectPath);
         } else {
           setError("PIN incorrecto. Por favor, intente nuevamente ❌");
         }
       } else {
-        const response = await axios.post(
-          "http://localhost:5000/api/admin/validate-pin",
-          { 
-            pin
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/admin/validate-pin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin }),
+        });
 
-        if (response.data && response.data.isValid) {
-          console.log("✅ PIN de administrador validado correctamente");
+        const result = await response.json();
+        if (result.isValid) {
           setShowPinModal(false);
           navigate(redirectPath);
         } else {
           setError("PIN incorrecto. Por favor, intente nuevamente ❌");
         }
       }
-    } catch (error) {
-      console.error("❌ Error:", error.response?.data);
+    } catch (err) {
+      console.error("❌ Error al validar el PIN:", err);
       setError("PIN incorrecto. Por favor, intente nuevamente ❌");
     }
   };
@@ -103,13 +100,17 @@ const SelectProfile = () => {
     <div className="container">
       <h2>Selecciona un perfil</h2>
 
-      {profiles.length === 0 ? (
+      {loading ? (
+        <p>Cargando perfiles...</p>
+      ) : gqlError ? (
+        <p>Error al cargar los perfiles: {gqlError.message}</p>
+      ) : profiles.length === 0 ? (
         <p>No se han creado perfiles aún. Por favor, agrega un perfil.</p>
       ) : (
         <div className="profiles-grid">
           {profiles.map((profile) => (
             <div
-              key={profile._id}
+              key={profile.id}
               className="profile-card"
               onClick={() => handleProfileClick(profile)}
             >
@@ -130,15 +131,9 @@ const SelectProfile = () => {
 
       {/* Botones de acción */}
       <div className="button-container">
-        <button className="circle-btn" onClick={() => navigate("/new-profile")}>
-          ➕
-        </button>
-        <button className="circle-btn" onClick={() => navigate("/AdminRestricted")}>
-          ⚙️
-        </button>
-        <button className="circle-btn" onClick={() => navigate("/videos")}>
-          📂
-        </button>
+        <button className="circle-btn" onClick={() => navigate("/new-profile")}>➕</button>
+        <button className="circle-btn" onClick={handleAdminProfilesClick}>⚙️</button>
+        <button className="circle-btn" onClick={handleAdminClick}>📂</button>
       </div>
 
       {/* Modal para ingresar PIN */}
@@ -157,15 +152,8 @@ const SelectProfile = () => {
               />
               {error && <p className="error-text">{error}</p>}
               <div className="button-group">
-                <button className="btn validate" onClick={handlePinSubmit}>
-                  Validar
-                </button>
-                <button
-                  className="btn cancel"
-                  onClick={() => setShowPinModal(false)}
-                >
-                  Cancelar
-                </button>
+                <button className="btn validate" onClick={handlePinSubmit}>Validar</button>
+                <button className="btn cancel" onClick={() => setShowPinModal(false)}>Cancelar</button>
               </div>
             </div>
           </div>
@@ -176,4 +164,3 @@ const SelectProfile = () => {
 };
 
 export default SelectProfile;
-

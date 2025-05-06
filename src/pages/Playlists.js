@@ -1,160 +1,148 @@
 import React, { useState, useEffect } from "react";
+import { gql, useQuery } from "@apollo/client";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button, Modal } from "react-bootstrap";
 import { getVideos } from "../services/videoService";
 
+const GET_PLAYLISTS_BY_USER = gql`
+  query GetPlaylists($userId: ID!) {
+    playlists(userId: $userId) {
+      id
+      name
+      videos {
+        id
+        name
+        url
+        description
+      }
+    }
+  }
+`;
+
 const Playlists = () => {
-    const [restrictedUsers, setRestrictedUsers] = useState([]);
-    const [formData, setFormData] = useState({
-        name: "",
-        profiles: []
-    });
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [playlists, setPlaylists] = useState([]);
-    const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-    const [showManageModal, setShowManageModal] = useState(false);
-    const [showMembersModal, setShowMembersModal] = useState(false);
-    const [availableVideos, setAvailableVideos] = useState([]);
-    const [playlistMembers, setPlaylistMembers] = useState([]);
-    const [playlistError, setPlaylistError] = useState("");
-    const [playlistSuccess, setPlaylistSuccess] = useState("");
-    const [showAddMembersModal, setShowAddMembersModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [editFormData, setEditFormData] = useState({
-        name: "",
-        profiles: []
-    });
+  const [restrictedUsers, setRestrictedUsers] = useState([]);
+  const [formData, setFormData] = useState({ name: "", profiles: [] });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [playlists, setPlaylists] = useState([]);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [showManageModal, setShowManageModal] = useState(false);
+  const [showMembersModal, setShowMembersModal] = useState(false);
+  const [availableVideos, setAvailableVideos] = useState([]);
+  const [playlistMembers, setPlaylistMembers] = useState([]);
+  const [playlistError, setPlaylistError] = useState("");
+  const [playlistSuccess, setPlaylistSuccess] = useState("");
+  const [showAddMembersModal, setShowAddMembersModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editFormData, setEditFormData] = useState({ name: "", profiles: [] });
 
-    useEffect(() => {
-        fetchRestrictedUsers();
-        fetchAvailableVideos();
-        fetchPlaylists();
-       
-    }, []);
+  const userId = localStorage.getItem("userId");
 
-    // Función para limpiar mensajes
-    const clearMessages = () => {
-        setError("");
-        setSuccess("");
-    };
+  // Apollo: obtener playlists
+  const { loading, data, refetch } = useQuery(GET_PLAYLISTS_BY_USER, {
+    variables: { userId },
+    skip: !userId,
+  });
+  refetch();
 
-    // Efecto para limpiar mensajes después de 3 segundos
-    useEffect(() => {
-        let timeoutId;
-        if (error || success) {
-            timeoutId = setTimeout(clearMessages, 3000);
-        }
-        return () => {
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-        };
-    }, [error, success]);
+  useEffect(() => {
+    if (data?.playlists) {
+      setPlaylists(data.playlists);
+    }
+  }, [data]);
 
-    const fetchPlaylists = async () => {
-        try {
-            const userId = localStorage.getItem("userId");
-            if (!userId) {
-                setError("No se encontró el ID del usuario");
-                return;
-            }
-    
-            console.log('Obteniendo playlists del usuario:', userId);
-            const response = await axios.get(`http://localhost:5000/api/playlists/user/${userId}`);
-    
-            if (response.data) {
-                setPlaylists(response.data);
-            } else {
-                setPlaylists([]);
-            }
-        } catch (error) {
-            console.error("Error al obtener playlists:", error);
-            setError("Error al obtener las playlists");
-            setPlaylists([]);
-        }
-    };
-    
-    const fetchRestrictedUsers = async () => {
-        try {
-            const userId = localStorage.getItem("userId");
-            const { data } = await axios.get(`http://localhost:5000/api/restricted-users/${userId}`);
-            setRestrictedUsers(data || []);
-        } catch (error) {
-            console.error("Error al obtener usuarios restringidos:", error);
-            setRestrictedUsers([]);
-        }
-    };
+  useEffect(() => {
+    fetchRestrictedUsers();
+    fetchAvailableVideos();
+  }, []);
 
-    const fetchAvailableVideos = async () => {
-        try {
-            const videos = await getVideos();
-            setAvailableVideos(videos);
-        } catch (error) {
-            console.error("Error al obtener videos disponibles:", error);
-            setAvailableVideos([]);
-        }
-    };
+  const clearMessages = () => {
+    setError("");
+    setSuccess("");
+  };
 
-    const fetchPlaylistMembers = async (playlist) => {
-        try {
-            console.log('Obteniendo miembros de la playlist:', playlist._id);
-            const { data } = await axios.get(`http://localhost:5000/api/playlists/${playlist._id}/members`);
-            console.log('Miembros obtenidos:', data);
-            setPlaylistMembers(data);
-            setSelectedPlaylist(playlist);
-            setShowMembersModal(true);
-        } catch (error) {
-            console.error("Error al obtener miembros de la playlist:", error);
-            setError(error.response?.data?.message || "Error al obtener los miembros de la playlist");
-        }
-    };
+  useEffect(() => {
+    let timeoutId;
+    if (error || success) timeoutId = setTimeout(clearMessages, 3000);
+    return () => clearTimeout(timeoutId);
+  }, [error, success]);
 
-    const getYouTubeEmbedUrl = (url) => {
-        const videoId = url.split('v=')[1]?.split('&')[0];
-        return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-    };
+  
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const userId = localStorage.getItem("userId");
-    
-            if (!formData.name || formData.profiles.length === 0) {
-                setError("Por favor, complete todos los campos requeridos");
-                return;
-            }
-    
-            const response = await axios.post("http://localhost:5000/api/playlists", {
-                name: formData.name,
-                profiles: [...formData.profiles, userId], // Asegura que el creador esté incluido
-                videos: []
-            });
-    
-            if (response.data) {
-                setFormData({ name: "", profiles: [] });
-                setSuccess("¡Playlist creada exitosamente! 🎉");
-                fetchPlaylists(); // recargar listas
-            }
-        } catch (error) {
-            console.error("Error al crear playlist:", error);
-            setError(error.response?.data?.message || "Error al crear la playlist");
-        }
-    };
-    
-    const handleDeletePlaylist = async (playlistId) => {
-        if (window.confirm("¿Está seguro de eliminar esta playlist?")) {
-            try {
-                await axios.delete(`http://localhost:5000/api/playlists/${playlistId}`);
-                setSuccess("Playlist eliminada exitosamente");
-                fetchPlaylists();
-            } catch (error) {
-                console.error("Error al eliminar playlist:", error);
-                setError("Error al eliminar la playlist");
-            }
-        }
-    };
+  const fetchRestrictedUsers = async () => {
+    try {
+      const { data } = await axios.get(`http://localhost:5000/api/restricted-users/${userId}`);
+      setRestrictedUsers(data || []);
+    } catch (error) {
+      console.error("Error al obtener usuarios restringidos:", error);
+      setRestrictedUsers([]);
+    }
+  };
+
+  const fetchPlaylistMembers = async (playlist) => {
+    try {
+      const { data } = await axios.get(`http://localhost:5000/api/playlists/${playlist.id}/members`);
+      setPlaylistMembers(data);
+      setSelectedPlaylist(playlist);
+      setShowMembersModal(true);
+    } catch (error) {
+      console.error("Error al obtener miembros de la playlist:", error);
+      setError("Error al obtener los miembros de la playlist");
+    }
+  };
+  
+  const fetchAvailableVideos = async () => {
+    try {
+      const videos = await getVideos();
+      setAvailableVideos(videos);
+    } catch (error) {
+      console.error("Error al obtener videos disponibles:", error);
+      setAvailableVideos([]);
+    }
+  };
+
+  const getYouTubeEmbedUrl = (url) => {
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!formData.name || formData.profiles.length === 0) {
+        setError("Por favor, complete todos los campos requeridos");
+        return;
+      }
+
+      const response = await axios.post("http://localhost:5000/api/playlists", {
+        name: formData.name,
+        profiles: [...formData.profiles, userId],
+        videos: []
+      });
+
+      if (response.data) {
+        setFormData({ name: "", profiles: [] });
+        setSuccess("¡Playlist creada exitosamente! 🎉");
+        refetch(); // Recargar con Apollo
+      }
+    } catch (error) {
+      console.error("Error al crear playlist:", error);
+      setError("Error al crear la playlist");
+    }
+  };
+
+  const handleDeletePlaylist = async (playlistId) => {
+    if (window.confirm("¿Está seguro de eliminar esta playlist?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/playlists/${playlistId}`);
+        setSuccess("Playlist eliminada exitosamente");
+        refetch(); // Apollo
+      } catch (error) {
+        setError("Error al eliminar la playlist");
+      }
+    }
+  };
 
     const handleEditPlaylist = async (e) => {
         e.preventDefault();
@@ -172,7 +160,8 @@ const Playlists = () => {
             if (response.data) {
                 setSuccess("¡Playlist actualizada exitosamente! 🎉");
                 setShowEditModal(false);
-                fetchPlaylists();
+                refetch();
+
             }
         } catch (error) {
             console.error("Error al actualizar playlist:", error);
