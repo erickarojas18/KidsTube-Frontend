@@ -22,7 +22,7 @@ import {
 
 // Crear cliente de Apollo
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql", // Cambia si tu endpoint es diferente
+  uri: "http://localhost:4000/graphql", // Cambia esto a la URL de tu servidor GraphQL
   cache: new InMemoryCache()
 });
 
