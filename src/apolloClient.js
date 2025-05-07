@@ -1,4 +1,7 @@
 // src/apolloClient.js
+
+//permite consultas a la API GraphQL desde el cliente de React
+// y maneja la autenticación mediante un token JWT almacenado en el localStorage o sessionStorage.
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
